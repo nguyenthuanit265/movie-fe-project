@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Search, MoreHorizontal} from 'lucide-react';
+import {Search, MoreHorizontal, Play} from 'lucide-react';
 
 const TMDBLogo = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" className="w-[150px]">
@@ -113,8 +113,6 @@ const Footer = () => (
 
 // eslint-disable-next-line react/prop-types
 const MovieCard = ({data}) => {
-    // Add hover state for the progress indicator
-    const [isHovered, setIsHovered] = useState(false);
     // eslint-disable-next-line react/prop-types
     const {title, posterPath, releaseDate, rating} = data;
 
@@ -125,23 +123,21 @@ const MovieCard = ({data}) => {
     };
 
     return (
-        <div
-            className="group relative transition-transform duration-200 hover:scale-105"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}>
-            <div className="absolute left-0 top-0 h-full w-1">
-                <div
-                    className="h-full w-full bg-[#1ed5a9] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-200 origin-top"/>
+        <div className="group relative flex-none w-[150px] transition-transform duration-200 hover:scale-[1.05]">
+            {/* Progress bars on hover */}
+            <div className="absolute left-0 top-0 bottom-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {[...Array(8)].map((_, i) => (
+                    <div key={i} className="h-8 w-full bg-[#1ed5a9]"/>
+                ))}
             </div>
 
-            {/* Card Content */}
-            <div className="rounded overflow-hidden">
-                {/* Poster Image */}
+            <div className="rounded-lg overflow-hidden">
+                {/* Poster */}
                 <div className="relative">
                     <img
                         src={posterPath}
                         alt={title}
-                        className="w-full aspect-[2/3] object-cover rounded-lg"
+                        className="w-[150px] h-[225px] object-cover rounded-lg"
                     />
                     <div className="absolute top-2 right-2">
                         <button
@@ -151,9 +147,9 @@ const MovieCard = ({data}) => {
                     </div>
                 </div>
 
-                {/* Score Circle */}
+                {/* Rating Circle */}
                 <div className="relative">
-                    <div className="absolute -top-5 left-3">
+                    <div className="absolute -bottom-5 left-3">
                         <div
                             className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#081c22] border-2 ${getRatingColor(rating)}`}>
                             <div className="flex items-baseline">
@@ -164,13 +160,117 @@ const MovieCard = ({data}) => {
                     </div>
                 </div>
 
-                {/* Movie Info */}
-                <div className="pt-6 px-3 pb-4">
+                {/* Info */}
+                <div className="pt-8 px-2 pb-4">
                     <h2 className="font-bold text-black hover:text-[#01b4e4] cursor-pointer line-clamp-2">{title}</h2>
-                    <p className="text-gray-600 text-sm mt-1">{releaseDate}</p>
+                    <p className="text-gray-500 text-sm mt-1">{releaseDate}</p>
                 </div>
             </div>
         </div>
+    );
+};
+
+const TrendingSection = () => {
+    const [timeWindow, setTimeWindow] = useState('today');
+
+    const movies = [
+        {
+            title: "Ad Vitam: Trọn đời",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
+            releaseDate: "Jan 10, 2025",
+            rating: 59
+        },
+        {
+            title: "Hổng hoang nước Mỹ",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
+            releaseDate: "Jan 09, 2025",
+            rating: 69
+        },
+        {
+            title: "Câu Chuyện Lúc Nửa Đêm",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
+            releaseDate: "Oct 13, 2023",
+            rating: 72
+        },
+        {
+            title: "Ad Vitam: Trọn đời",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
+            releaseDate: "Jan 10, 2025",
+            rating: 59
+        },
+        {
+            title: "Hổng hoang nước Mỹ",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
+            releaseDate: "Jan 09, 2025",
+            rating: 69
+        },
+        {
+            title: "Câu Chuyện Lúc Nửa Đêm",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
+            releaseDate: "Oct 13, 2023",
+            rating: 72
+        },
+        {
+            title: "Ad Vitam: Trọn đời",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
+            releaseDate: "Jan 10, 2025",
+            rating: 59
+        },
+        {
+            title: "Hổng hoang nước Mỹ",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
+            releaseDate: "Jan 09, 2025",
+            rating: 69
+        },
+        {
+            title: "Câu Chuyện Lúc Nửa Đêm",
+            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
+            releaseDate: "Oct 13, 2023",
+            rating: 72
+        }
+    ];
+
+    return (
+        <section className="px-10 py-8 bg-white">
+            {/* Header */}
+            <div className="max-w-[1170px] mx-auto flex items-center gap-5 mb-6">
+                <h2 className="text-xl font-semibold text-black">Trending</h2>
+                <div className="inline-flex rounded-full border border-[#032541] p-1">
+                    <button
+                        onClick={() => setTimeWindow('today')}
+                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
+                            timeWindow === 'today'
+                                ? 'bg-[#032541] text-white'
+                                : 'text-[#032541]'
+                        }`}
+                    >
+                        Today
+                    </button>
+                    <button
+                        onClick={() => setTimeWindow('week')}
+                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
+                            timeWindow === 'week'
+                                ? 'bg-[#032541] text-white'
+                                : 'text-[#032541]'
+                        }`}
+                    >
+                        This Week
+                    </button>
+                </div>
+            </div>
+
+            {/* Scrollable Container */}
+            <div className="relative max-w-[1170px] mx-auto">
+                <div className="overflow-x-auto"
+                     style={{msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch'}}>
+                    <div className="flex gap-[20px] pb-4" style={{WebkitScrollbar: {display: 'none'}}}>
+                        {movies.map((movie, index) => (
+                            <MovieCard key={index} data={movie}/>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 
@@ -316,6 +416,246 @@ const LeaderboardSection = () => {
     );
 };
 
+const Header = () => {
+    return (
+        <>
+            {/* Navigation */}
+            <header className="fixed top-0 left-0 right-0 z-50">
+                <nav className="bg-[#032541]">
+                    <div className="max-w-[1300px] mx-auto px-4 lg:px-8">
+                        <div className="flex items-center justify-between h-16">
+                            {/* Left side */}
+                            <div className="flex items-center gap-8">
+                                {/* Logo */}
+                                <div className="flex items-center">
+                                    <h1 className="text-[#01b4e4] text-2xl font-bold">TMDB</h1>
+                                    <div className="ml-2 w-12 h-6 bg-[#01b4e4] rounded-lg"></div>
+                                </div>
+
+                                {/* Nav Links - Hidden on mobile */}
+                                <div className="hidden md:flex items-center gap-6">
+                                    <button
+                                        className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">Movies
+                                    </button>
+                                    <button
+                                        className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">TV
+                                        Shows
+                                    </button>
+                                    <button
+                                        className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">People
+                                    </button>
+                                    <button
+                                        className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">More
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Right side */}
+                            <div className="flex items-center gap-6">
+                                {/* Hidden on mobile */}
+                                <div className="hidden md:flex items-center gap-6">
+                                    <button
+                                        className="text-white hover:text-[#01b4e4] text-xl font-light bg-[#032541]">+
+                                    </button>
+                                    <button
+                                        className="text-white hover:text-[#01b4e4] px-2 py-1 border border-white rounded text-sm bg-[#032541]">VI
+                                    </button>
+                                    <button className="text-white hover:text-[#01b4e4] bg-[#032541]">Đăng nhập</button>
+                                    <button className="text-white hover:text-[#01b4e4] bg-[#032541]">Tham gia TMDB
+                                    </button>
+                                </div>
+                                <Search className="text-[#01b4e4] w-6 h-6 cursor-pointer"/>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            {/* Hero Section */}
+            <section
+                className="relative min-h-[300px] sm:min-h-[360px] mt-16 bg-gradient-to-br from-[#042541] to-[#01b4e4]">
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0">
+                    <img
+                        src="/api/placeholder/1400/400"
+                        alt="Hero Background"
+                        className="w-full h-full object-cover mix-blend-overlay opacity-10"
+                    />
+                </div>
+
+                {/* Content */}
+                <div className="relative max-w-[1300px] mx-auto px-4 lg:px-8 py-10 sm:py-20">
+                    <div className="max-w-[1000px]">
+                        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+                            Welcome.
+                        </h1>
+                        <h2 className="text-xl sm:text-2xl text-white mb-10">
+                            Millions of movies, TV shows and people to discover. Explore now.
+                        </h2>
+
+                        {/* Search Bar */}
+                        <div className="relative w-full">
+                            <input
+                                type="text"
+                                placeholder="Search for a movie, tv show, person......"
+                                className="w-full h-12 px-6 rounded-full text-base placeholder:text-gray-500 focus:outline-none"
+                            />
+                            <button
+                                className="absolute right-0 top-0 h-full px-6 sm:px-8 bg-gradient-to-r from-[#1ed5a9] to-[#01b4e4] text-white font-semibold rounded-full">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </>
+    );
+};
+
+// eslint-disable-next-line react/prop-types
+const TrailerCard = ({data}) => {
+    // eslint-disable-next-line react/prop-types
+    const {title, thumbnailPath, description} = data;
+
+    return (
+        <div className="group relative flex-none w-[300px] transition-transform duration-200 hover:scale-[1.05]">
+            {/* Trailer Thumbnail */}
+            <div className="relative rounded-lg overflow-hidden">
+                <img
+                    src={thumbnailPath}
+                    alt={title}
+                    className="w-[300px] h-[169px] object-cover"
+                />
+                {/* Play Button Overlay */}
+                <div
+                    className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+                        <Play className="w-8 h-8 text-white fill-white"/>
+                    </div>
+                </div>
+                {/* More Options Button */}
+                <button
+                    className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#032541]/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <MoreHorizontal className="text-white w-5 h-5"/>
+                </button>
+            </div>
+
+            {/* Title and Description */}
+            <div className="mt-4">
+                <h3 className="text-white font-medium text-base hover:text-[#01b4e4] cursor-pointer">{title}</h3>
+                <p className="text-gray-400 text-sm mt-1">{description}</p>
+            </div>
+        </div>
+    );
+};
+
+const LatestTrailersSection = () => {
+    const [filter, setFilter] = useState('popular');
+
+    const trailers = [
+        {
+            title: "Ambyar Mak Byar",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/wdMPocTOudlQwO7aN0cM6i0JUaz.jpg",
+            description: "Ambyar Mak Byar - Official Trailer 2 | 9 Januari 2025 di Bioskop"
+        },
+        {
+            title: "The Rookie",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/2m1Mu0xPj4SikiqkaolTRUcNtWH.jpg",
+            description: "Official Season 7 Trailer"
+        },
+        {
+            title: "Em Yêu",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/hctfNoMpQGfn3VXdBYb9p0P5bT5.jpg",
+            description: "In UK and Irish cinemas January 10"
+        },
+        {
+            title: "Game Changer",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/aBw406SvghTKV6CTK9t84Bo9Xik.jpg",
+            description: "Game Changer Trailer (Telugu) | Ram Charan | Kiara Advani | Shankar"
+        },
+        {
+            title: "Ambyar Mak Byar",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/wdMPocTOudlQwO7aN0cM6i0JUaz.jpg",
+            description: "Ambyar Mak Byar - Official Trailer 2 | 9 Januari 2025 di Bioskop"
+        },
+        {
+            title: "The Rookie",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/2m1Mu0xPj4SikiqkaolTRUcNtWH.jpg",
+            description: "Official Season 7 Trailer"
+        },
+        {
+            title: "Em Yêu",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/hctfNoMpQGfn3VXdBYb9p0P5bT5.jpg",
+            description: "In UK and Irish cinemas January 10"
+        },
+        {
+            title: "Game Changer",
+            thumbnailPath: "https://media.themoviedb.org/t/p/w710_and_h400_multi_faces/aBw406SvghTKV6CTK9t84Bo9Xik.jpg",
+            description: "Game Changer Trailer (Telugu) | Ram Charan | Kiara Advani | Shankar"
+        },
+    ];
+
+    return (
+        <>
+            <section className="px-10 py-8 bg-[#0d253f]">
+                {/* Header */}
+                <div className="max-w-[1300px] mx-auto flex items-center gap-5 mb-6">
+                    <h2 className="text-xl font-semibold text-white">Latest Trailers</h2>
+                    <div className="inline-flex rounded-full bg-[#032541] p-1">
+                        <button
+                            onClick={() => setFilter('popular')}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
+                                filter === 'popular'
+                                    ? 'bg-[#21d07a] text-[#032541]'
+                                    : 'bg-[#032541] text-white'
+                            }`}
+                        >
+                            Popular
+                        </button>
+                        <button
+                            onClick={() => setFilter('in_theaters')}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
+                                filter === 'in_theaters'
+                                    ? 'bg-[#21d07a] text-[#032541]'
+                                    : 'bg-[#032541] text-white'
+                            }`}
+                        >
+                            In Theaters
+                        </button>
+                    </div>
+                </div>
+
+                {/* Scrollable Container */}
+                <div className="relative max-w-[1340px] mx-auto">
+                    <div className="overflow-x-auto no-scrollbar">
+                        <div className="flex gap-[20px] pb-4">
+                            {trailers.map((trailer, index) => (
+                                <TrailerCard key={index} data={trailer}/>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Right fade effect */}
+                    <div
+                        className="absolute top-0 right-0 w-[60px] h-full bg-gradient-to-l from-[#0d253f] to-transparent pointer-events-none"/>
+                </div>
+
+                {/* Remove scrollbar */}
+                {/*<style jsx global>{`*/}
+                {/*    .no-scrollbar {*/}
+                {/*        -ms-overflow-style: none;*/}
+                {/*        scrollbar-width: none;*/}
+                {/*    }*/}
+
+                {/*    .no-scrollbar::-webkit-scrollbar {*/}
+                {/*        display: none;*/}
+                {/*    }*/}
+                {/*`}</style>*/}
+            </section>
+        </>
+    );
+};
+
 const App = () => {
     const [timeWindow, setTimeWindow] = useState('today');
 
@@ -378,147 +718,13 @@ const App = () => {
 
     return (
         <div className="min-h-screen bg-[#0d253f]">
-            {/* Navigation */}
-            <nav className="bg-[#032541]">
-                <div className="w-full px-10 py-3 flex items-center justify-between">
-                    {/* Left Nav */}
-                    <div className="flex items-center gap-8">
-                        <div className="flex items-center">
-                            <span className="text-[#01b4e4] text-2xl font-bold">TMDB</span>
-                            <div className="ml-2 w-12 h-6 rounded-lg bg-[#01b4e4]"/>
-                        </div>
-                        <div className="flex gap-6">
-                            <button className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">Movies
-                            </button>
-                            <button className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">TV
-                                Shows
-                            </button>
-                            <button className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">People
-                            </button>
-                            <button className="text-white hover:text-[#01b4e4] transition-colors bg-[#032541]">More
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Right Nav */}
-                    <div className="flex items-center gap-6">
-                        <button className="text-white hover:text-[#01b4e4] text-xl bg-[#032541]">+</button>
-                        <button
-                            className="text-white hover:text-[#01b4e4] px-2 py-1 border border-white rounded bg-[#032541]">VI
-                        </button>
-                        <button className="text-white hover:text-[#01b4e4] bg-[#032541]">Đăng nhập</button>
-                        <button className="text-white hover:text-[#01b4e4] bg-[#032541]">Tham gia TMDB</button>
-                        <Search className="text-[#01b4e4] w-5 h-5 cursor-pointer"/>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Hero Section */}
-            <section className="relative h-[300px] bg-gradient-to-br from-[#042541] to-[#01b4e4]">
-                <div className="absolute inset-0">
-                    <img
-                        src="/api/placeholder/1300/300"
-                        alt="Background"
-                        className="w-full h-full object-cover mix-blend-overlay opacity-10"
-                    />
-                </div>
-                <div className="relative h-full w-full px-10 flex flex-col justify-center">
-                    <h1 className="text-5xl font-bold text-white mb-4">Welcome.</h1>
-                    <h2 className="text-2xl text-white mb-8">
-                        Millions of movies, TV shows and people to discover. Explore now.
-                    </h2>
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search for a movie, tv show, person......"
-                            className="w-full h-12 px-5 rounded-full text-base"
-                        />
-                        <button
-                            className="absolute right-0 top-0 h-full px-8 bg-gradient-to-r from-[#1ed5a9] to-[#01b4e4] text-white font-semibold rounded-full">
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </section>
+            <Header/>
 
             {/* Trending Section */}
-            <section className="w-full px-10 py-8 bg-white">
-                <div className="flex items-center gap-5 mb-6">
-                    <h3 className="text-xl font-semibold">Trending</h3>
-                    <div className="inline-flex rounded-full border border-[#032541] p-1">
-                        <button
-                            onClick={() => setTimeWindow('today')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                timeWindow === 'today'
-                                    ? 'bg-[#032541] text-white'
-                                    : 'text-[#032541]'
-                            }`}
-                        >
-                            Today
-                        </button>
-                        <button
-                            onClick={() => setTimeWindow('week')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                timeWindow === 'week'
-                                    ? 'bg-[#032541] text-white'
-                                    : 'text-[#032541]'
-                            }`}
-                        >
-                            This Week
-                        </button>
-                    </div>
-                </div>
-
-                {/*<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">*/}
-                {/*    {movies.map((movie, index) => (*/}
-                {/*        <MovieCard key={index} data={movie} />*/}
-                {/*    ))}*/}
-                {/*</div>*/}
-
-                <div className="relative">
-                    <div className="w-full overflow-hidden">
-                        <div className="flex overflow-x-auto gap-[20px] pb-4">
-                            {movies.map((movie, index) => (
-                                <MovieCard key={index} data={movie}/>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <TrendingSection/>
 
             {/* Latest Trailers Section */}
-            <section className="px-10 py-8 bg-[#0d253f]">
-                <div className="flex items-center gap-5 mb-6">
-                    <h3 className="text-xl font-semibold text-white">Latest Trailers</h3>
-                    <div className="inline-flex rounded-full bg-[#032541] p-1">
-                        <button
-                            onClick={() => setTimeWindow('popular')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                timeWindow === 'popular'
-                                    ? 'bg-[#21d07a] text-black'
-                                    : 'bg-[#0d253f] text-white'
-                            }`}
-                        >
-                            Popular
-                        </button>
-                        <button
-                            onClick={() => setTimeWindow('inTheaters')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                timeWindow === 'inTheaters'
-                                    ? 'bg-[#21d07a] text-black'
-                                    : 'bg-[#0d253f] text-white'
-                            }`}
-                        >
-                            In Theaters
-                        </button>
-                    </div>
-                </div>
-
-                {/* Placeholder for trailer content */}
-                <div className="bg-[#1F3B53] rounded-lg p-8 text-white text-center">
-                    This panel didn't return any results. Try refreshing it.
-                </div>
-            </section>
+            <LatestTrailersSection/>
 
             {/* What's Popular Section */}
             <section className="px-10 py-8 bg-white">
@@ -591,7 +797,7 @@ const App = () => {
             <LeaderboardSection/>
 
             {/* Footer */}
-            <Footer />
+            <Footer/>
         </div>
     );
 };
