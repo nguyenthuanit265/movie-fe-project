@@ -11,6 +11,7 @@ import Header from "./components/Header.jsx";
 import LatestTrailersSection from "./components/LatestTrailersSection.jsx";
 import Login from "./components/Login.jsx";
 import PanelSection from "./components/PannelSection.jsx";
+import SignUp from "./components/SignUp.jsx";
 
 const App = () => {
 
@@ -90,6 +91,7 @@ const App = () => {
 
                             {/* Login Page */}
                             <Route path="/login" element={<Login/>}/>
+                            <Route path="/signup" element={<SignUp/>}/>
                         </Routes>
                     </main>
 
