@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Search, MoreHorizontal, Play, Check, X} from 'lucide-react';
+import {signUp} from "./api/auth.js";
 
 const TMDBLogo = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" className="w-[150px]">
@@ -477,7 +478,7 @@ const Header = () => {
                     {/* Background Image */}
                     <div className="absolute inset-0 w-full h-full">
                         <img
-                            src="/api/placeholder/1400/400"
+                            src="/src/api/placeholder/1400/400"
                             alt="Hero Background"
                             className="w-full h-full object-cover mix-blend-overlay opacity-10"
                         />
@@ -853,7 +854,7 @@ const JoinTodaySection = () => {
                 {/* Background Image */}
                 <div className="absolute inset-0">
                     <img
-                        src="/api/placeholder/2000/600"
+                        src="/src/api/placeholder/2000/600"
                         alt="Join Today Background"
                         className="w-full h-full object-cover mix-blend-overlay opacity-10"
                     />
@@ -917,34 +918,54 @@ const JoinTodaySection = () => {
             </section>
 
             {/* Sign Up Modal */}
-            {/*<SignUpModal*/}
-            {/*    isOpen={isModalOpen}*/}
-            {/*    onClose={() => setIsModalOpen(false)}*/}
-            {/*/>*/}
-
-            <Link
-                to="/signup"
-                className="bg-[#805be7] hover:bg-[#916ee7] transition-colors text-white px-8 py-2.5 rounded-md font-semibold text-lg"
-            >
-                Sign Up
-            </Link>
+            <SignUpModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
 
         </>
     );
 };
 
+// eslint-disable-next-line react/prop-types
 const SignUpModal = ({isOpen, onClose}) => {
     const [formData, setFormData] = useState({
-        username: '',
+        name: '',
         password: '',
         confirmPassword: '',
         email: ''
     });
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Add form submission logic here
+        setError(''); // Clear previous errors
+        setIsLoading(true);
         console.log('Form submitted:', formData);
+
+        try {
+            // Call the sign-up API
+            const response = await signUp(formData);
+            console.log('Sign-up successful:', response);
+
+            // Close the modal on success
+            onClose();
+        } catch (error) {
+            setError('Sign-up failed. Please try again.'); // Set error message
+            console.error('Sign-up error:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
 
     if (!isOpen) return null;
@@ -1013,8 +1034,8 @@ const SignUpModal = ({isOpen, onClose}) => {
                             <label className="block text-gray-700 mb-2">Username</label>
                             <input
                                 type="text"
-                                value={formData.username}
-                                onChange={(e) => setFormData({...formData, username: e.target.value})}
+                                value={formData.name}
+                                onChange={(e) => setFormData({...formData, name: e.target.value})}
                                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#01b4e4]"
                             />
                         </div>
