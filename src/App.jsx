@@ -15,7 +15,6 @@ import SignUp from "./components/SignUp.jsx";
 import ResendActivation from "./components/ResendActivation.jsx";
 import ResetPasswordScreen1 from "./components/ResetPasswordScreen1.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
-import ProfileHeader from "./components/ProfileHeader.jsx";
 import Profile from "./components/Profile.jsx";
 
 const App = () => {
