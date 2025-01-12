@@ -12,6 +12,11 @@ import LatestTrailersSection from "./components/LatestTrailersSection.jsx";
 import Login from "./components/Login.jsx";
 import PanelSection from "./components/PannelSection.jsx";
 import SignUp from "./components/SignUp.jsx";
+import ResendActivation from "./components/ResendActivation.jsx";
+import ResetPasswordScreen1 from "./components/ResetPasswordScreen1.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
+import ProfileHeader from "./components/ProfileHeader.jsx";
+import Profile from "./components/Profile.jsx";
 
 const App = () => {
 
@@ -92,6 +97,10 @@ const App = () => {
                             {/* Login Page */}
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/signup" element={<SignUp/>}/>
+                            <Route path="/verify-email" element={<ResendActivation/>}/>
+                            <Route path="/forgot-password" element={<ResetPasswordScreen1/>}/>
+                            <Route path="/reset-password" element={<ResetPassword/>}/>
+                            <Route path="/profile" element={<Profile/>}/>
                         </Routes>
                     </main>
 
