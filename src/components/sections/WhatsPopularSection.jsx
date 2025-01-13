@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import MovieCard from "./MovieCard.jsx";
+import React, { useState } from "react";
+import MovieCard from "../common/MovieCard.jsx";
 
 const WhatsPopularSection = () => {
     const [filter, setFilter] = useState('streaming');
@@ -125,33 +125,29 @@ const WhatsPopularSection = () => {
                     <div className="inline-flex rounded-full bg-[#032541] p-1">
                         <button
                             onClick={() => setFilter('streaming')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                filter === 'streaming' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                            }`}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'streaming' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
+                                }`}
                         >
                             Streaming
                         </button>
                         <button
                             onClick={() => setFilter('on_tv')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                filter === 'on_tv' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                            }`}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'on_tv' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
+                                }`}
                         >
                             On TV
                         </button>
                         <button
                             onClick={() => setFilter('for_rent')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                filter === 'for_rent' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                            }`}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'for_rent' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
+                                }`}
                         >
                             For Rent
                         </button>
                         <button
                             onClick={() => setFilter('in_theaters')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                filter === 'in_theaters' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                            }`}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'in_theaters' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
+                                }`}
                         >
                             In Theaters
                         </button>
@@ -163,14 +159,14 @@ const WhatsPopularSection = () => {
                     <div className="overflow-x-auto no-scrollbar">
                         <div className="flex gap-[20px] pb-4">
                             {movies.map((movie, index) => (
-                                <MovieCard key={index} data={movie}/>
+                                <MovieCard key={index} data={movie} />
                             ))}
                         </div>
                     </div>
 
                     {/* Right fade effect */}
                     <div
-                        className="absolute top-0 right-0 w-[60px] h-full bg-gradient-to-l from-white to-transparent pointer-events-none"/>
+                        className="absolute top-0 right-0 w-[60px] h-full bg-gradient-to-l from-white to-transparent pointer-events-none" />
                 </div>
 
                 {/*<style jsx global>{`*/}

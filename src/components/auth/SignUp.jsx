@@ -1,10 +1,8 @@
-// eslint-disable-next-line react/prop-types
-import React, {useState} from "react";
-import {signUp} from "../api/auth.js";
-import {Check} from "lucide-react";
-import {useNavigate, Link} from "react-router-dom";
+import React, { useState } from "react";
+import AuthProvider from '../../providers/AutherProvider';
+import { Check } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
 const SignUp = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -13,39 +11,52 @@ const SignUp = () => {
         email: ''
     });
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Add form submission logic here
-        setError(''); // Clear previous errors
         setIsLoading(true);
-        console.log('Form submitted:', formData);
+        setError(null);
+        setSuccessMessage(null);
+
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match!');
+            setIsLoading(false);
+            return;
+        }
 
         try {
-            // Call the sign-up API
-            const response = await signUp(formData);
-            console.log('Sign-up successful:', response);
+            const response = await AuthProvider.signUp({
+                email: formData.email,
+                name: formData.name,
+                password: formData.password,
+            });
 
-            // Close the modal on success
-            // onClose();
-            navigate('/');
-        } catch (error) {
-            setError('Sign-up failed. Please try again.'); // Set error message
-            console.error('Sign-up error:', error);
+            console.log('Signup response:', response);
+
+            if (response && response.data) {
+                setSuccessMessage('Signup successful! Redirecting to login...');
+                setTimeout(() => navigate('/login'), 2000);
+            }
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+            setError(errorMessage);
+            console.error('Signup error:', err);
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
     };
+
     const benefits = [
         "Find something to watch on your subscribed streaming services",
         "Log the movies and TV shows you have watched",
@@ -53,11 +64,12 @@ const SignUp = () => {
         "Build and maintain a personal watchlist",
         "Build custom mixed lists (movies and TV)",
         "Take part in movie and TV discussions",
-        "Contribute to, and improve the information in our database"
+        "Contribute to, and improve the information in our database",
     ];
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="w-full max-w-[1300px] mx-auto px-10 py-8">
+        <div className="pt-20 pb-8 flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-[1300px] mx-auto px-10">
                 <div className="flex gap-8">
                     {/* Left Side - Benefits */}
                     <div className="w-[300px] shrink-0">
@@ -68,7 +80,7 @@ const SignUp = () => {
                             <ul className="p-5 text-black space-y-4 bg-gray-50">
                                 {benefits.map((benefit, index) => (
                                     <li key={index} className="flex items-start gap-2">
-                                        <Check className="w-5 h-5 mt-0.5 shrink-0"/>
+                                        <Check className="w-5 h-5 mt-0.5 shrink-0" />
                                         <span>{benefit}</span>
                                     </li>
                                 ))}
@@ -86,6 +98,17 @@ const SignUp = () => {
                             JavaScript is required to continue.
                         </p>
 
+                        {error && (
+                            <div className="mb-4 text-red-600 bg-red-100 p-3 rounded">
+                                {error}
+                            </div>
+                        )}
+                        {successMessage && (
+                            <div className="mb-4 text-green-600 bg-green-100 p-3 rounded">
+                                {successMessage}
+                            </div>
+                        )}
+
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
                                 <label className="block text-gray-700 mb-2">
@@ -93,9 +116,11 @@ const SignUp = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={formData.username}
-                                    onChange={(e) => setFormData({...formData, username: e.target.value})}
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                    required
                                 />
                             </div>
 
@@ -105,22 +130,26 @@ const SignUp = () => {
                                 </label>
                                 <input
                                     type="password"
+                                    name="password"
                                     value={formData.password}
-                                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
                                     minLength={4}
+                                    required
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-gray-700 mb-2">
-                                    Password Confirm
+                                    Confirm Password
                                 </label>
                                 <input
                                     type="password"
+                                    name="confirmPassword"
                                     value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                    required
                                 />
                             </div>
 
@@ -130,9 +159,11 @@ const SignUp = () => {
                                 </label>
                                 <input
                                     type="email"
+                                    name="email"
                                     value={formData.email}
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                    required
                                 />
                             </div>
 
@@ -144,9 +175,11 @@ const SignUp = () => {
                             <div className="flex items-center gap-4">
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 rounded font-semibold transition-colors text-black"
+                                    disabled={isLoading}
+                                    className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 rounded font-semibold transition-colors text-black
+                                    ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    Đăng ký
+                                    {isLoading ? 'Signing up...' : 'Sign Up'}
                                 </button>
                                 <Link
                                     to="/"
@@ -162,6 +195,5 @@ const SignUp = () => {
         </div>
     );
 };
-
 
 export default SignUp;

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import MovieCard from "./MovieCard.jsx";
+import React, { useState } from "react";
+import MovieCard from "../common/MovieCard.jsx";
 
 const TrendingSection = () => {
     const [timeWindow, setTimeWindow] = useState('today');
@@ -69,21 +69,19 @@ const TrendingSection = () => {
                 <div className="inline-flex rounded-full border border-[#032541] p-1">
                     <button
                         onClick={() => setTimeWindow('today')}
-                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                            timeWindow === 'today'
-                                ? 'bg-[#032541] text-white'
-                                : 'bg-white text-[#032541]'
-                        }`}
+                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${timeWindow === 'today'
+                            ? 'bg-[#032541] text-white'
+                            : 'bg-white text-[#032541]'
+                            }`}
                     >
                         Today
                     </button>
                     <button
                         onClick={() => setTimeWindow('week')}
-                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                            timeWindow === 'week'
-                                ? 'bg-[#032541] text-white'
-                                : 'bg-white text-[#032541]'
-                        }`}
+                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${timeWindow === 'week'
+                            ? 'bg-[#032541] text-white'
+                            : 'bg-white text-[#032541]'
+                            }`}
                     >
                         This Week
                     </button>
@@ -93,10 +91,10 @@ const TrendingSection = () => {
             {/* Scrollable Container */}
             <div className="relative max-w-[1170px] mx-auto">
                 <div className="overflow-x-auto"
-                     style={{msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch'}}>
-                    <div className="flex gap-[20px] pb-4" style={{WebkitScrollbar: {display: 'none'}}}>
+                    style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+                    <div className="flex gap-[20px] pb-4" style={{ WebkitScrollbar: { display: 'none' } }}>
                         {movies.map((movie, index) => (
-                            <MovieCard key={index} data={movie}/>
+                            <MovieCard key={index} data={movie} />
                         ))}
                     </div>
                 </div>
