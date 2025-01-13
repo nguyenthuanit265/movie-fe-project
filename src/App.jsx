@@ -1,28 +1,180 @@
-import React, {useState} from 'react';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'; // Import React Router
-// import {useNavigate} from 'react-router-dom';
+// import React from 'react';
+// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import { Provider } from 'react-redux';
+// import { store } from './store/store';
+// import { useSelector, useDispatch } from 'react-redux';
+// import Footer from "./components/layout/Footer";
+// import Header from "./components/layout/Header";
+// import Login from "./components/auth/Login";
+// import SignUp from "./components/auth/SignUp";
+// import ResendActivation from "./components/auth/ResendActivation";
+// import ResetPasswordScreen1 from "./components/auth/ResetPasswordScreen1";
+// import ResetPassword from "./components/auth/ResetPassword";
+// import Profile from "./components/profile/Profile";
+// import HomePage from "./components/screens/HomePage";
 
-import Footer from "./components/Footer.jsx";
-import LeaderboardSection from "./components/LeaderboardSection.jsx";
-import JoinTodaySection from "./components/JoinTodaySection.jsx";
-import WhatsPopularSection from "./components/WhatsPopularSection.jsx";
-import TrendingSection from "./components/TrendingSection.jsx";
-import Header from "./components/Header.jsx";
-import LatestTrailersSection from "./components/LatestTrailersSection.jsx";
-import Login from "./components/Login.jsx";
-import PanelSection from "./components/PannelSection.jsx";
-import SignUp from "./components/SignUp.jsx";
-import ResendActivation from "./components/ResendActivation.jsx";
-import ResetPasswordScreen1 from "./components/ResetPasswordScreen1.jsx";
-import ResetPassword from "./components/ResetPassword.jsx";
-import ProfileHeader from "./components/ProfileHeader.jsx";
-import Profile from "./components/Profile.jsx";
+// // Custom route component for authenticated routes
+// const PrivateRoute = ({ children }) => {
+//     const { isAuthenticated } = useSelector(state => state.auth);
+//     const hasToken = localStorage.getItem('token');
+//     return (isAuthenticated && hasToken) ? children : <Navigate to="/" />;
+// };
 
-const App = () => {
+// const PublicRoute = ({ children }) => {
+//     const { isAuthenticated } = useSelector(state => state.auth);
+//     const hasToken = localStorage.getItem('token');
+//     return (!isAuthenticated || !hasToken) ? children : <Navigate to="/" />;
+// };
+
+// const App = () => {
+//     const dispatch = useDispatch();
+
+//     useEffect(() => {
+//         const token = localStorage.getItem('token');
+//         const userId = localStorage.getItem('userId');
+//         const userEmail = localStorage.getItem('userEmail');
+
+//         if (token && userId && userEmail) {
+//             dispatch(loginSuccess({
+//                 token,
+//                 user: {
+//                     id: userId,
+//                     email: userEmail
+//                 }
+//             }));
+//         }
+//     }, []);
+//     return (
+//         <Provider store={store}>
+//             <Router>
+//                 <div className="min-h-screen w-full bg-white overflow-x-hidden">
+//                     <Header />
+//                     <main>
+//                         <Routes>
+//                             {/* Public Routes */}
+//                             <Route path="/" element={<HomePage />} />
+
+//                             {/* Auth Routes - Redirect if already logged in */}
+//                             <Route path="/login" element={
+//                                 <PublicRoute>
+//                                     <Login />
+//                                 </PublicRoute>
+//                             } />
+//                             <Route path="/signup" element={
+//                                 <PublicRoute>
+//                                     <SignUp />
+//                                 </PublicRoute>
+//                             } />
+//                             <Route path="/verify-email" element={<ResendActivation />} />
+//                             <Route path="/forgot-password" element={<ResetPasswordScreen1 />} />
+//                             <Route path="/reset-password" element={<ResetPassword />} />
+
+//                             {/* Protected Routes - Require authentication */}
+//                             <Route path="/profile" element={
+//                                 <PrivateRoute>
+//                                     <Profile />
+//                                 </PrivateRoute>
+//                             } />
+//                         </Routes>
+//                     </main>
+//                     <Footer />
+//                 </div>
+//             </Router>
+//         </Provider>
+//     );
+// };
+
+// export default App;
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import Footer from "./components/layout/Footer";
+import Header from "./components/layout/Header";
+import Login from "./components/auth/Login";
+import SignUp from "./components/auth/SignUp";
+import ResendActivation from "./components/auth/ResendActivation";
+import ResetPasswordScreen1 from "./components/auth/ResetPasswordScreen1";
+import ResetPassword from "./components/auth/ResetPassword";
+import Profile from "./components/profile/Profile";
+import HomePage from "./components/screens/HomePage";
+import { loginSuccess } from './store/authSlice';
+
+// Tách PrivateRoute và PublicRoute ra component riêng
+const PrivateRoute = ({ children }) => {
+    const { isAuthenticated } = useSelector(state => state.auth);
+    const hasToken = localStorage.getItem('token');
+    return (isAuthenticated && hasToken) ? children : <Navigate to="/" />;
+};
+
+const PublicRoute = ({ children }) => {
+    const { isAuthenticated } = useSelector(state => state.auth);
+    const hasToken = localStorage.getItem('token');
+    return (!isAuthenticated || !hasToken) ? children : <Navigate to="/" />;
+};
+
+// Tách phần routes ra component riêng
+const AppRoutes = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const userEmail = localStorage.getItem('userEmail');
+
+        if (token && userId && userEmail) {
+            dispatch(loginSuccess({
+                token,
+                user: {
+                    id: userId,
+                    email: userEmail
+                }
+            }));
+        }
+    }, [dispatch]);
 
     return (
+        <div className="min-h-screen w-full bg-white overflow-x-hidden">
+            <Header />
+            <main>
+                <Routes>
+                    {/* Public Routes */}
+                    <Route path="/" element={<HomePage />} />
+
+                    {/* Auth Routes */}
+                    <Route path="/login" element={
+                        <PublicRoute>
+                            <Login />
+                        </PublicRoute>
+                    } />
+                    <Route path="/signup" element={
+                        <PublicRoute>
+                            <SignUp />
+                        </PublicRoute>
+                    } />
+                    <Route path="/verify-email" element={<ResendActivation />} />
+                    <Route path="/forgot-password" element={<ResetPasswordScreen1 />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+
+                    {/* Protected Routes */}
+                    <Route path="/profile" element={
+                        <PrivateRoute>
+                            <Profile />
+                        </PrivateRoute>
+                    } />
+                </Routes>
+            </main>
+            <Footer />
+        </div>
+    );
+};
+
+// App chính chỉ wrap Provider và Router
+const App = () => {
+    return (
         <>
-            {/* Global styles to ensure full screen */}
             <style jsx global>{`
                 html, body {
                     margin: 0;
@@ -47,68 +199,11 @@ const App = () => {
                     display: none;
                 }
             `}</style>
-            <Router>
-                <div className="min-h-screen w-full bg-white overflow-x-hidden">
-                    {/* Header & Hero */}
-                    <Header/>
-
-                    {/* Main Content */}
-                    <main>
-                        {/* Define routes */}
-                        <Routes>
-                            {/* Home Page */}
-                            <Route
-                                path="/"
-                                element={
-                                    <>
-                                        {/* Hero Section / Panel Section */}
-                                        <section>
-                                            <PanelSection/>
-                                        </section>
-
-                                        {/* Trending Section */}
-                                        <section className="w-full bg-white">
-                                            <TrendingSection/>
-                                        </section>
-
-                                        {/* Latest Trailers */}
-                                        <section className="w-full bg-[#0d253f]">
-                                            <LatestTrailersSection/>
-                                        </section>
-
-                                        {/* What's Popular */}
-                                        <section className="w-full bg-white">
-                                            <WhatsPopularSection/>
-                                        </section>
-
-                                        {/* Join Today Section */}
-                                        <section>
-                                            <JoinTodaySection/>
-                                        </section>
-
-                                        {/* Leaderboard */}
-                                        <section className="w-full bg-white">
-                                            <LeaderboardSection/>
-                                        </section>
-                                    </>
-                                }
-                            />
-
-                            {/* Login Page */}
-                            <Route path="/login" element={<Login/>}/>
-                            <Route path="/signup" element={<SignUp/>}/>
-                            <Route path="/verify-email" element={<ResendActivation/>}/>
-                            <Route path="/forgot-password" element={<ResetPasswordScreen1/>}/>
-                            <Route path="/reset-password" element={<ResetPassword/>}/>
-                            <Route path="/profile" element={<Profile/>}/>
-                        </Routes>
-                    </main>
-
-                    {/* Footer */}
-                    <Footer/>
-                </div>
-            </Router>
-
+            <Provider store={store}>
+                <Router>
+                    <AppRoutes />
+                </Router>
+            </Provider>
         </>
     );
 };

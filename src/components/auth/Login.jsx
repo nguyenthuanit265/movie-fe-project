@@ -1,50 +1,56 @@
-import React, {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom'; // Assuming you're using React Router for navigation
-import axios from "axios"; // Import the login function
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
+import AuthProvider from '../../providers/AutherProvider';
 
-// eslint-disable-next-line react/prop-types
 const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
-    const [error, setError] = useState(null);
     const [remainingAttempts, setRemainingAttempts] = useState(10);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate(); // For redirection after successful login
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading, error } = useSelector(state => state.auth);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
-        setError(null);
+        dispatch(loginStart());
 
         try {
-            const response = await axios.post('http://localhost:8081/api/v1/auth/login', {
+            const response = await AuthProvider.login({
                 email: formData.email,
                 password: formData.password
             });
 
-            if (response.data.status === 200) {
-                // Store user data
-                localStorage.setItem('token', response.data.data.accessToken);
-                localStorage.setItem('userId', response.data.data.id);
-                localStorage.setItem('userEmail', response.data.data.email);
+            console.log('Login response:', response);
 
-                // Redirect to profile
+            if (response && response.data) {
+                const userData = {
+                    token: response.data.access_token,
+                    user: {
+                        id: response.data.id,
+                        email: response.data.email
+                    }
+                };
+
+                dispatch(loginSuccess(userData));
+                localStorage.setItem('token', response.data.access_token);
+                localStorage.setItem('userId', response.data.id);
+                localStorage.setItem('userEmail', response.data.email);
                 navigate('/profile');
             }
         } catch (err) {
             setRemainingAttempts(prev => prev - 1);
-            setError(err.response?.data?.message || 'An error occurred');
-        } finally {
-            setIsLoading(false);
+            const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+            dispatch(loginFailure(errorMessage));
+            console.error('Login error:', err);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            {/* Keep your Header component here */}
-
             <main className="w-full max-w-[1300px] mx-auto px-10 py-8">
                 <div className="max-w-[800px]">
                     <h2 className="text-2xl font-semibold mb-4 text-black">Login to your account</h2>
@@ -89,7 +95,7 @@ const Login = () => {
                             <input
                                 type="text"
                                 value={formData.email}
-                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#01b4e4] bg-white text-black"
                                 required
                             />
@@ -100,7 +106,7 @@ const Login = () => {
                             <input
                                 type="password"
                                 value={formData.password}
-                                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#01b4e4] bg-white text-black"
                                 required
                             />
@@ -109,12 +115,12 @@ const Login = () => {
                         <div className="flex gap-4 items-center pt-2">
                             <button
                                 type="submit"
-                                disabled={isLoading}
+                                disabled={loading}
                                 className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 
                                           rounded font-semibold transition-colors
-                                          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                          ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {isLoading ? 'Logging in...' : 'Đăng nhập'}
+                                {loading ? 'Logging in...' : 'Đăng nhập'}
                             </button>
                             <Link
                                 to="/forgot-password"
@@ -126,8 +132,6 @@ const Login = () => {
                     </form>
                 </div>
             </main>
-
-            {/* Keep your Footer component here */}
         </div>
     );
 };

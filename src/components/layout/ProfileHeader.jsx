@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AverageRatingCircle = ({score, label}) => {
+const AverageRatingCircle = ({ score, label }) => {
     return (
         <div className="flex flex-col items-center">
             <div className="relative w-12 h-12">
@@ -16,7 +16,7 @@ const AverageRatingCircle = ({score, label}) => {
     );
 };
 
-const ProfileHeader = ({user}) => {
+const ProfileHeader = ({ user }) => {
     // Get user data from localStorage
     const userEmail = localStorage.getItem('userEmail') || '';
     const joinDate = 'May 2022'; // You might want to store this in localStorage too from your API
@@ -60,7 +60,7 @@ const ProfileHeader = ({user}) => {
                             {userData.email}
                         </h2>
                         <p className="text-gray-300">
-                            Thành viên kể từ {userData.joinDate}
+                            Join from {userData.joinDate}
                         </p>
                     </div>
                 </div>

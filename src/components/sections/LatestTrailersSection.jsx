@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import TrailerCard from "./TrailerCard.jsx";
+import React, { useState } from "react";
+import TrailerCard from "../common/TrailerCard.jsx";
 
 const LatestTrailersSection = () => {
     const [filter, setFilter] = useState('popular');
@@ -56,21 +56,19 @@ const LatestTrailersSection = () => {
                     <div className="inline-flex rounded-full bg-[#032541] p-1">
                         <button
                             onClick={() => setFilter('popular')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                filter === 'popular'
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'popular'
                                     ? 'bg-[#21d07a] text-[#032541]'
                                     : 'bg-[#032541] text-white'
-                            }`}
+                                }`}
                         >
                             Popular
                         </button>
                         <button
                             onClick={() => setFilter('in_theaters')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${
-                                filter === 'in_theaters'
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'in_theaters'
                                     ? 'bg-[#21d07a] text-[#032541]'
                                     : 'bg-[#032541] text-white'
-                            }`}
+                                }`}
                         >
                             In Theaters
                         </button>
@@ -82,14 +80,14 @@ const LatestTrailersSection = () => {
                     <div className="overflow-x-auto no-scrollbar">
                         <div className="flex gap-[20px] pb-4">
                             {trailers.map((trailer, index) => (
-                                <TrailerCard key={index} data={trailer}/>
+                                <TrailerCard key={index} data={trailer} />
                             ))}
                         </div>
                     </div>
 
                     {/* Right fade effect */}
                     <div
-                        className="absolute top-0 right-0 w-[60px] h-full bg-gradient-to-l from-[#0d253f] to-transparent pointer-events-none"/>
+                        className="absolute top-0 right-0 w-[60px] h-full bg-gradient-to-l from-[#0d253f] to-transparent pointer-events-none" />
                 </div>
 
                 {/* Remove scrollbar */}
