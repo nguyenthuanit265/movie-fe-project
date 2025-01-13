@@ -1,10 +1,11 @@
+
 import { MoreHorizontal } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
 const MovieCard = ({ data }) => {
-    // eslint-disable-next-line react/prop-types
-    const { title, posterPath, releaseDate, rating } = data;
+    const navigate = useNavigate();
+    const { title, posterPath, releaseDate, rating, id } = data;
 
     const getRatingColor = (score) => {
         if (score >= 70) return 'border-[#21d07a]';
@@ -12,8 +13,15 @@ const MovieCard = ({ data }) => {
         return 'border-[#db2360]';
     };
 
+    const handleClick = () => {
+        navigate(`/movie/${id}`, { state: { movieData: data } });
+    };
+
     return (
-        <div className="group relative flex-none w-[150px] transition-transform duration-200 hover:scale-[1.05]">
+        <div
+            className="group relative flex-none w-[150px] transition-transform duration-200 hover:scale-[1.05] cursor-pointer"
+            onClick={handleClick}
+        >
             {/* Progress bars on hover */}
             <div className="absolute left-0 top-0 bottom-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {[...Array(8)].map((_, i) => (
@@ -47,7 +55,7 @@ const MovieCard = ({ data }) => {
 
                 {/* Info */}
                 <div className="pt-8 px-2 pb-4">
-                    <h2 className="font-bold text-black hover:text-[#01b4e4] cursor-pointer line-clamp-2">{title}</h2>
+                    <h2 className="font-bold text-black hover:text-[#01b4e4] line-clamp-2">{title}</h2>
                     <p className="text-gray-500 text-sm mt-1">{releaseDate}</p>
                 </div>
             </div>
