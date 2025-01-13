@@ -1,186 +1,123 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MovieCard from "../common/MovieCard.jsx";
+import MovieProvider from "../../providers/MovieProvider.jsx";
 
 const WhatsPopularSection = () => {
-    const [filter, setFilter] = useState('streaming');
+    const [filter, setFilter] = useState("all"); // Bổ sung filter mặc định
+    const [allMovies, setAllMovies] = useState([]); // Lưu toàn bộ dữ liệu từ API
+    const [movies, setMovies] = useState([]); // Dữ liệu hiển thị sau khi lọc
+    const [isLoading, setIsLoading] = useState(true);
+    const [isFading, setIsFading] = useState(false);
 
-    const movies = [
-        {
-            title: "Ad Vitam: Trọn đời",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
-            releaseDate: "Jan 10, 2025",
-            rating: 59
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Ad Vitam: Trọn đời",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
-            releaseDate: "Jan 10, 2025",
-            rating: 59
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
+    // Hàm fetch dữ liệu từ API
+    const fetchMovies = async () => {
+        setIsLoading(true);
+        try {
+            const result = await MovieProvider.getPopular();
+            if (result.data && result.data.content) {
+                setAllMovies(result.data.content); // Lưu toàn bộ dữ liệu gốc
+                setMovies(result.data.content); // Hiển thị mặc định
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    };
+
+    // Hàm xử lý lọc và sắp xếp dựa trên filter
+    const applyFilter = (newFilter) => {
+        let filteredMovies = [...allMovies]; // Tạo bản sao dữ liệu gốc
+        switch (newFilter) {
+            case "on_tv":
+                // Sắp xếp theo tên (A-Z)
+                filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case "for_rent":
+                // Sắp xếp theo điểm đánh giá (từ cao đến thấp)
+                filteredMovies.sort((a, b) => b.vote_average - a.vote_average);
+                break;
+            case "in_theaters":
+                // Hiển thị ngẫu nhiên một số phim
+                filteredMovies = filteredMovies.sort(() => 0.5 - Math.random()).slice(0, 5);
+                break;
+            default:
+                break;
+        }
+        setMovies(filteredMovies); // Cập nhật dữ liệu hiển thị
+    };
+
+    const handleFilterChange = (newFilter) => {
+        setIsFading(true); // Kích hoạt fade-out
+        setTimeout(() => {
+            setFilter(newFilter); // Cập nhật trạng thái filter
+            applyFilter(newFilter); // Áp dụng lọc
+            setIsFading(false); // Kích hoạt fade-in
+        }, 300); // Thời gian hiệu ứng fade-out
+    };
+
+    useEffect(() => {
+        fetchMovies();
+    }, []);
 
     return (
-        <>
-            <section className="w-full px-10 py-8 bg-white">
-                {/* Header */}
-                <div className="max-w-[1300px] mx-auto flex items-center gap-5 mb-6">
-                    <h2 className="text-xl font-semibold text-black">What's Popular</h2>
-                    {/* Filter Tabs */}
-                    <div className="inline-flex rounded-full bg-[#032541] p-1">
+        <section className="px-10 py-8 bg-white">
+            {/* Header */}
+            <div className="max-w-[1300px] mx-auto flex items-center gap-5 mb-6">
+                <h2 className="text-xl font-semibold text-black">What's Popular</h2>
+                {/* Filter Tabs */}
+                <div className="inline-flex rounded-full border border-[#032541] p-1">
+                    {["all", "on_tv", "for_rent", "in_theaters"].map((option) => (
                         <button
-                            onClick={() => setFilter('streaming')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'streaming' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
+                            key={option}
+                            onClick={() => handleFilterChange(option)}
+                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === option
+                                ? "bg-[#032541] text-white"
+                                : "bg-white text-[#032541]"
                                 }`}
                         >
-                            Streaming
+                            {option.replace("_", " ").toUpperCase()}
                         </button>
-                        <button
-                            onClick={() => setFilter('on_tv')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'on_tv' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                                }`}
-                        >
-                            On TV
-                        </button>
-                        <button
-                            onClick={() => setFilter('for_rent')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'for_rent' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                                }`}
-                        >
-                            For Rent
-                        </button>
-                        <button
-                            onClick={() => setFilter('in_theaters')}
-                            className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${filter === 'in_theaters' ? 'bg-[#21d07a] text-[#032541]' : 'text-white'
-                                }`}
-                        >
-                            In Theaters
-                        </button>
-                    </div>
+                    ))}
                 </div>
+            </div>
 
-                {/* Scrollable Container */}
-                <div className="relative max-w-[1300px] mx-auto">
-                    <div className="overflow-x-auto no-scrollbar">
+            {/* Movie Content */}
+            <div className="relative max-w-[1300px] mx-auto">
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-10">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                ) : movies.length > 0 ? (
+                    <div
+                        className={`overflow-x-auto transition-opacity duration-300 ${isFading ? "opacity-0 hidden-opacity" : "opacity-100 visible-opacity"
+                            }`}
+                        style={{
+                            minHeight: "300px",
+                            msOverflowStyle: "none",
+                            scrollbarWidth: "none",
+                            WebkitOverflowScrolling: "touch",
+                        }}
+                    >
                         <div className="flex gap-[20px] pb-4">
-                            {movies.map((movie, index) => (
-                                <MovieCard key={index} data={movie} />
+                            {movies.map((movie) => (
+                                <MovieCard
+                                    key={movie.id}
+                                    data={{
+                                        title: movie.title,
+                                        posterPath: movie.poster_url,
+                                        releaseDate: movie.release_date,
+                                        rating: movie.vote_average,
+                                    }}
+                                />
                             ))}
                         </div>
                     </div>
-
-                    {/* Right fade effect */}
-                    <div
-                        className="absolute top-0 right-0 w-[60px] h-full bg-gradient-to-l from-white to-transparent pointer-events-none" />
-                </div>
-
-                {/*<style jsx global>{`*/}
-                {/*    .no-scrollbar {*/}
-                {/*        -ms-overflow-style: none;*/}
-                {/*        scrollbar-width: none;*/}
-                {/*    }*/}
-
-                {/*    .no-scrollbar::-webkit-scrollbar {*/}
-                {/*        display: none;*/}
-                {/*    }*/}
-                {/*`}</style>*/}
-            </section>
-        </>
+                ) : (
+                    <p className="text-center text-gray-500">No movies found</p>
+                )}
+            </div>
+        </section>
     );
 };
 

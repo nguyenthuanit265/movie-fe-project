@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
 import AuthProvider from '../../providers/AutherProvider';
+import { auth } from '../../config/firebase';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -49,6 +51,73 @@ const Login = () => {
         }
     };
 
+    const handleGoogleLogin = async () => {
+        dispatch(loginStart());
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            // Thử đăng nhập với API hiện tại
+            try {
+                const response = await AuthProvider.login({
+                    email: user.email,
+                    password: user.uid // Sử dụng UID từ Google làm password
+                });
+
+                if (response && response.data) {
+                    const userData = {
+                        token: response.data.access_token,
+                        user: {
+                            id: response.data.id,
+                            email: response.data.email
+                        }
+                    };
+
+                    dispatch(loginSuccess(userData));
+                    localStorage.setItem('token', response.data.access_token);
+                    localStorage.setItem('userId', response.data.id);
+                    localStorage.setItem('userEmail', response.data.email);
+                    navigate('/profile');
+                }
+            } catch (err) {
+                // Nếu đăng nhập thất bại, thử đăng ký tài khoản mới
+                try {
+                    await AuthProvider.signup({
+                        email: user.email,
+                        name: user.displayName || user.email.split('@')[0],
+                        password: user.uid
+                    });
+
+                    // Sau khi đăng ký thành công, thử đăng nhập lại
+                    const loginResponse = await AuthProvider.login({
+                        email: user.email,
+                        password: user.uid
+                    });
+
+                    if (loginResponse && loginResponse.data) {
+                        const userData = {
+                            token: loginResponse.data.access_token,
+                            user: {
+                                id: loginResponse.data.id,
+                                email: loginResponse.data.email
+                            }
+                        };
+
+                        dispatch(loginSuccess(userData));
+                        localStorage.setItem('token', loginResponse.data.access_token);
+                        localStorage.setItem('userId', loginResponse.data.id);
+                        localStorage.setItem('userEmail', loginResponse.data.email);
+                        navigate('/profile');
+                    }
+                } catch (signupErr) {
+                    dispatch(loginFailure('Failed to create account with Google'));
+                }
+            }
+        } catch (err) {
+            dispatch(loginFailure('Google login failed'));
+        }
+    };
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <main className="w-full max-w-[1300px] mx-auto px-10 py-8">
@@ -117,8 +186,8 @@ const Login = () => {
                                 type="submit"
                                 disabled={loading}
                                 className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 
-                                          rounded font-semibold transition-colors
-                                          ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                      rounded font-semibold transition-colors
+                                      ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 {loading ? 'Logging in...' : 'Đăng nhập'}
                             </button>
@@ -129,6 +198,19 @@ const Login = () => {
                                 Reset password
                             </Link>
                         </div>
+                        <button
+                            type="button"
+                            onClick={handleGoogleLogin}
+                            disabled={loading}
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+                        >
+                            <img
+                                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                alt="Google"
+                                className="w-5 h-5"
+                            />
+                            <span>Đăng nhập với Google</span>
+                        </button>
                     </form>
                 </div>
             </main>

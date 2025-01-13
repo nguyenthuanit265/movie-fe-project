@@ -14,7 +14,6 @@ import Profile from "./components/profile/Profile";
 import HomePage from "./components/screens/HomePage";
 import { loginSuccess } from './store/authSlice';
 
-// Tách PrivateRoute và PublicRoute ra component riêng
 const PrivateRoute = ({ children }) => {
     const { isAuthenticated } = useSelector(state => state.auth);
     const hasToken = localStorage.getItem('token');

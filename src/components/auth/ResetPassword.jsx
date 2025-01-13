@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const ResetPassword = () => {
     const [formData, setFormData] = useState({
@@ -40,10 +40,10 @@ const ResetPassword = () => {
                                 id="username"
                                 type="email"
                                 value={formData.username}
-                                onChange={(e) => setFormData({...formData, username: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                                 className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100
                                          focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4]"
-                                // disabled
+                            // disabled
                             />
                         </div>
 
@@ -58,7 +58,7 @@ const ResetPassword = () => {
                                 id="newPassword"
                                 type="password"
                                 value={formData.newPassword}
-                                onChange={(e) => setFormData({...formData, newPassword: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                                 placeholder="New Password"
                                 className="w-full px-4 py-2 border border-gray-300 rounded
                                          focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4]"
@@ -77,7 +77,7 @@ const ResetPassword = () => {
                                 id="confirmPassword"
                                 type="password"
                                 value={formData.confirmPassword}
-                                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                 placeholder="Confirm New Password"
                                 className="w-full px-4 py-2 border border-gray-300 rounded
                                          focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4]"

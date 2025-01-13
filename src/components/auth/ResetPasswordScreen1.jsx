@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import AuthProvider from '../../providers/AutherProvider';
 
 const ResetPasswordScreen1 = () => {
     const [email, setEmail] = useState('');
@@ -8,12 +9,24 @@ const ResetPasswordScreen1 = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        // Add your email resend logic here
-        console.log('Resending activation to:', email);
-        // Simulate API call
-        setTimeout(() => {
+        setError(null);
+        setSuccessMessage(null);
+
+        try {
+            const response = await AuthProvider.resetPassword(email);
+
+            if (response) {
+                setSuccessMessage(
+                    'Password reset email sent successfully! Please check your inbox.'
+                );
+            }
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+            setError(errorMessage);
+            console.error('Password reset error:', err);
+        } finally {
             setIsLoading(false);
-        }, 1000);
+        }
     };
 
     return (

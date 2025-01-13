@@ -1,10 +1,10 @@
-import {MoreHorizontal} from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import React from "react";
 
 // eslint-disable-next-line react/prop-types
-const MovieCard = ({data}) => {
+const MovieCard = ({ data }) => {
     // eslint-disable-next-line react/prop-types
-    const {title, posterPath, releaseDate, rating} = data;
+    const { title, posterPath, releaseDate, rating } = data;
 
     const getRatingColor = (score) => {
         if (score >= 70) return 'border-[#21d07a]';
@@ -17,7 +17,7 @@ const MovieCard = ({data}) => {
             {/* Progress bars on hover */}
             <div className="absolute left-0 top-0 bottom-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {[...Array(8)].map((_, i) => (
-                    <div key={i} className="h-8 w-full bg-[#1ed5a9]"/>
+                    <div key={i} className="h-8 w-full bg-[#1ed5a9]" />
                 ))}
             </div>
 
@@ -30,14 +30,9 @@ const MovieCard = ({data}) => {
                         className="w-[150px] h-[225px] object-cover rounded-lg"
                     />
                     <div className="absolute top-2 right-2">
-                        <button
-                            className="w-8 h-8 rounded-full bg-[#032541]/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <MoreHorizontal className="text-white w-5 h-5"/>
-                        </button>
                     </div>
                 </div>
 
-                {/* Rating Circle */}
                 <div className="relative">
                     <div className="absolute -bottom-5 left-3">
                         <div

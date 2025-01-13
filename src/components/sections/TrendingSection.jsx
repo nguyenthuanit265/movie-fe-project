@@ -1,65 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MovieCard from "../common/MovieCard.jsx";
+import MovieProvider from "../../providers/MovieProvider.jsx";
 
 const TrendingSection = () => {
-    const [timeWindow, setTimeWindow] = useState('today');
+    const [timeWindow, setTimeWindow] = useState("today");
+    const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isFading, setIsFading] = useState(false);
 
-    const movies = [
-        {
-            title: "Ad Vitam: Trọn đời",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
-            releaseDate: "Jan 10, 2025",
-            rating: 59
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Ad Vitam: Trọn đời",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
-            releaseDate: "Jan 10, 2025",
-            rating: 59
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
-        },
-        {
-            title: "Ad Vitam: Trọn đời",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
-            releaseDate: "Jan 10, 2025",
-            rating: 59
-        },
-        {
-            title: "Hổng hoang nước Mỹ",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/ff0s9OHGNSZL6cVteIb7LNvTnJD.jpg",
-            releaseDate: "Jan 09, 2025",
-            rating: 69
-        },
-        {
-            title: "Câu Chuyện Lúc Nửa Đêm",
-            posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/bOEoyOtsnoWbx4sq1VuDkKfFkYa.jpg",
-            releaseDate: "Oct 13, 2023",
-            rating: 72
+    // Hàm fetch dữ liệu
+    const fetchMovies = async () => {
+        setIsLoading(true);
+        try {
+            const result = await MovieProvider.getTrending(timeWindow);
+            if (result.data && result.data.content) {
+                setMovies(result.data.content);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    };
+
+    const handleTimeWindowChange = (newTimeWindow) => {
+        setIsFading(true); // Kích hoạt fade-out
+        setTimeout(() => {
+            setTimeWindow(newTimeWindow);
+            setIsFading(false); // Kích hoạt fade-in sau khi cập nhật trạng thái
+        }, 300); // Thời gian hiệu ứng fade-out
+    };
+
+    useEffect(() => {
+        fetchMovies();
+    }, [timeWindow]);
 
     return (
         <section className="px-10 py-8 bg-white">
@@ -68,19 +42,19 @@ const TrendingSection = () => {
                 <h2 className="text-xl font-semibold text-black">Trending</h2>
                 <div className="inline-flex rounded-full border border-[#032541] p-1">
                     <button
-                        onClick={() => setTimeWindow('today')}
-                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${timeWindow === 'today'
-                            ? 'bg-[#032541] text-white'
-                            : 'bg-white text-[#032541]'
+                        onClick={() => handleTimeWindowChange("today")}
+                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${timeWindow === "today"
+                            ? "bg-[#032541] text-white"
+                            : "bg-white text-[#032541]"
                             }`}
                     >
                         Today
                     </button>
                     <button
-                        onClick={() => setTimeWindow('week')}
-                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${timeWindow === 'week'
-                            ? 'bg-[#032541] text-white'
-                            : 'bg-white text-[#032541]'
+                        onClick={() => handleTimeWindowChange("week")}
+                        className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${timeWindow === "week"
+                            ? "bg-[#032541] text-white"
+                            : "bg-white text-[#032541]"
                             }`}
                     >
                         This Week
@@ -88,16 +62,40 @@ const TrendingSection = () => {
                 </div>
             </div>
 
-            {/* Scrollable Container */}
+            {/* Movie Content */}
             <div className="relative max-w-[1170px] mx-auto">
-                <div className="overflow-x-auto"
-                    style={{ msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-                    <div className="flex gap-[20px] pb-4" style={{ WebkitScrollbar: { display: 'none' } }}>
-                        {movies.map((movie, index) => (
-                            <MovieCard key={index} data={movie} />
-                        ))}
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-10">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
-                </div>
+                ) : movies.length > 0 ? (
+                    <div
+                        className={`overflow-x-auto transition-opacity duration-300 ${isFading ? "opacity-0 hidden-opacity" : "opacity-100 visible-opacity"
+                            }`}
+                        style={{
+                            minHeight: "300px", // Đặt chiều cao tối thiểu để tránh chèn
+                            msOverflowStyle: "none",
+                            scrollbarWidth: "none",
+                            WebkitOverflowScrolling: "touch",
+                        }}
+                    >
+                        <div className="flex gap-[20px] pb-4" style={{ WebkitScrollbar: { display: "none" } }}>
+                            {movies.map((movie) => (
+                                <MovieCard
+                                    key={movie.id}
+                                    data={{
+                                        title: movie.title,
+                                        posterPath: movie.poster_url,
+                                        releaseDate: movie.release_date,
+                                        rating: movie.vote_average,
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <p className="text-center text-gray-500">No movies found</p>
+                )}
             </div>
         </section>
     );
