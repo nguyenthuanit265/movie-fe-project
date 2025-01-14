@@ -62,6 +62,9 @@ const MovieDetail = () => {
                         onUpdateMovie={(updatedMovie) => setMovie((prev) => ({ ...prev, ...updatedMovie }))}
                     />
                 )}
+                {movie.casts && movie.casts.length > 0 && (
+                    <CastCard casts={movie.casts} />
+                )}
 
 
                 <div className="bg-white mt-8 p-4 rounded-lg shadow-md">

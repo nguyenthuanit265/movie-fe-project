@@ -5,6 +5,9 @@ import AuthProvider from '../../providers/AutherProvider';
 const ResetPasswordScreen1 = () => {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
