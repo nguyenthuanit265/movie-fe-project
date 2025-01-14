@@ -25,9 +25,6 @@ const Login = () => {
                 email: formData.email,
                 password: formData.password
             });
-
-            console.log('Login response:', response);
-
             if (response && response.data) {
                 const userData = {
                     token: response.data.access_token,

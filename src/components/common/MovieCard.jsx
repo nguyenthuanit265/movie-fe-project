@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 const MovieCard = ({ data }) => {
     const navigate = useNavigate();
     const { title, posterPath, releaseDate, rating, id } = data;
-
     const getRatingColor = (score) => {
         if (score >= 70) return 'border-[#21d07a]';
         if (score >= 40) return 'border-[#d2d531]';
@@ -15,6 +14,7 @@ const MovieCard = ({ data }) => {
 
     const handleClick = () => {
         navigate(`/movie/${id}`, { state: { movieData: data } });
+
     };
 
     return (

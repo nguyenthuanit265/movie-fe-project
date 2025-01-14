@@ -54,7 +54,6 @@ const Header = () => {
     const navItems = {
         Movies: ['Popular', 'Now Playing', 'Upcoming', 'Top Rated'],
         People: ['Popular People'],
-        More: ['Discussions', 'Leaderboard', 'Support', 'API']
     };
 
     return (
@@ -75,49 +74,7 @@ const Header = () => {
                             </nav>
                         </div>
 
-                        {/* Right side
-                        <div className="flex items-center gap-6">
-                            <div className="hidden md:flex items-center gap-6">
-                                {isAuthenticated ? (
-                                    <>
-                                        <button
-                                            onClick={() => navigate('/profile')}
-                                            className="text-white hover:text-[#01b4e4] bg-[#032541]"
-                                        >
-                                            {user?.email}
-                                        </button>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="text-white hover:text-[#01b4e4] bg-[#032541]"
-                                        >
-                                            Logout
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button className="text-white hover:text-[#01b4e4] text-xl font-light bg-[#032541]">
-                                            +
-                                        </button>
-                                        <button className="text-white hover:text-[#01b4e4] px-2 py-1 border border-white rounded text-sm bg-[#032541]">
-                                            VI
-                                        </button>
-                                        <button
-                                            onClick={() => navigate('/login')}
-                                            className="text-white hover:text-[#01b4e4] bg-[#032541]"
-                                        >
-                                            Login
-                                        </button>
-                                        <button
-                                            onClick={() => navigate('/signup')}
-                                            className="text-white hover:text-[#01b4e4] bg-[#032541]"
-                                        >
-                                            Join TMDB
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                            <Search className="text-[#01b4e4] w-6 h-6 cursor-pointer" />
-                        </div> */}
+
                         <div className="flex items-center gap-6">
                             <div className="hidden md:flex items-center gap-6">
                                 {isAuthenticated ? (
