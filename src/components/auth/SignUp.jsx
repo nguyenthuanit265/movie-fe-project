@@ -2,6 +2,8 @@
 // import AuthProvider from '../../providers/AutherProvider';
 // import { Check } from "lucide-react";
 // import { useNavigate, Link } from "react-router-dom";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 // const SignUp = () => {
 //     const [formData, setFormData] = useState({
@@ -10,19 +12,22 @@
 //         confirmPassword: '',
 //         email: ''
 //     });
-//     const [error, setError] = useState('');
-//     const [successMessage, setSuccessMessage] = useState('');
 //     const [isLoading, setIsLoading] = useState(false);
+//     const [isVerificationEmailSent, setIsVerificationEmailSent] = useState(false);
 //     const navigate = useNavigate();
 
 //     const handleSubmit = async (e) => {
 //         e.preventDefault();
 //         setIsLoading(true);
-//         setError(null);
-//         setSuccessMessage(null);
 
 //         if (formData.password !== formData.confirmPassword) {
-//             setError('Passwords do not match!');
+//             toast.error("Passwords do not match!");
+//             setIsLoading(false);
+//             return;
+//         }
+
+//         if (formData.password.length < 6 || !/\d/.test(formData.password) || !/[a-zA-Z]/.test(formData.password)) {
+//             toast.error("Password must be at least 6 characters long and include both letters and numbers.");
 //             setIsLoading(false);
 //             return;
 //         }
@@ -34,18 +39,36 @@
 //                 password: formData.password,
 //             });
 
-//             console.log('Signup response:', response);
-
-//             if (response && response.data) {
-//                 setSuccessMessage('Signup successful! Redirecting to login...');
-//                 setTimeout(() => navigate('/login'), 2000);
+//             if (response && response.id) {
+//                 toast.success("Signup successful! Please verify your email to activate your account.");
+//                 setFormData({ name: '', password: '', confirmPassword: '', email: '' });
+//                 setIsVerificationEmailSent(true);
+//                 navigate("/verify-email");
 //             }
 //         } catch (err) {
-//             const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-//             setError(errorMessage);
-//             console.error('Signup error:', err);
+
+//             if (err.message?.includes("User is existed in system")) {
+//                 toast.warning("This email is already registered. Please verify your email or login if already verified.");
+//                 setIsVerificationEmailSent(true);
+//             } else {
+//                 const errorMessage = err.response?.data?.message || err.message || "An error occurred";
+//                 toast.error(errorMessage);
+//             }
 //         } finally {
 //             setIsLoading(false);
+//         }
+//     };
+
+//     const sendVerificationEmail = async () => {
+//         try {
+//             const response = await AuthProvider.sendVerifyEmail(formData.email);
+//             if (response.success) {
+//                 toast.success("Verification email sent! Please check your inbox.");
+//             } else {
+//                 throw new Error("Failed to send verification email.");
+//             }
+//         } catch (err) {
+//             toast.error("Failed to send verification email. Please try again later.");
 //         }
 //     };
 
@@ -69,9 +92,9 @@
 
 //     return (
 //         <div className="pt-20 pb-8 flex items-center justify-center bg-gray-100">
+//             <ToastContainer />
 //             <div className="w-full max-w-[1300px] mx-auto px-10">
 //                 <div className="flex gap-8">
-//                     {/* Left Side - Benefits */}
 //                     <div className="w-[300px] shrink-0">
 //                         <div className="bg-[#01b4e4] rounded overflow-hidden">
 //                             <h3 className="text-xl text-white font-bold p-5 pb-0">
@@ -87,8 +110,6 @@
 //                             </ul>
 //                         </div>
 //                     </div>
-
-//                     {/* Right Side - Form */}
 //                     <div className="flex-1 max-w-3xl">
 //                         <h2 className="text-2xl font-semibold mb-4 text-black">
 //                             Sign up for an account
@@ -98,22 +119,9 @@
 //                             JavaScript is required to continue.
 //                         </p>
 
-//                         {error && (
-//                             <div className="mb-4 text-red-600 bg-red-100 p-3 rounded">
-//                                 {error}
-//                             </div>
-//                         )}
-//                         {successMessage && (
-//                             <div className="mb-4 text-green-600 bg-green-100 p-3 rounded">
-//                                 {successMessage}
-//                             </div>
-//                         )}
-
 //                         <form onSubmit={handleSubmit} className="space-y-6">
 //                             <div>
-//                                 <label className="block text-gray-700 mb-2">
-//                                     Username
-//                                 </label>
+//                                 <label className="block text-gray-700 mb-2">Username</label>
 //                                 <input
 //                                     type="text"
 //                                     name="name"
@@ -126,7 +134,7 @@
 
 //                             <div>
 //                                 <label className="block text-gray-700 mb-2">
-//                                     Password (4 characters minimum)
+//                                     Password (at least 6 characters, including letters and numbers)
 //                                 </label>
 //                                 <input
 //                                     type="password"
@@ -134,15 +142,12 @@
 //                                     value={formData.password}
 //                                     onChange={handleChange}
 //                                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
-//                                     minLength={4}
 //                                     required
 //                                 />
 //                             </div>
 
 //                             <div>
-//                                 <label className="block text-gray-700 mb-2">
-//                                     Confirm Password
-//                                 </label>
+//                                 <label className="block text-gray-700 mb-2">Confirm Password</label>
 //                                 <input
 //                                     type="password"
 //                                     name="confirmPassword"
@@ -154,9 +159,7 @@
 //                             </div>
 
 //                             <div>
-//                                 <label className="block text-gray-700 mb-2">
-//                                     Email
-//                                 </label>
+//                                 <label className="block text-gray-700 mb-2">Email</label>
 //                                 <input
 //                                     type="email"
 //                                     name="email"
@@ -176,19 +179,26 @@
 //                                 <button
 //                                     type="submit"
 //                                     disabled={isLoading}
-//                                     className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 rounded font-semibold transition-colors text-black
-//                                     ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+//                                     className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 rounded font-semibold transition-colors text-black ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
 //                                 >
 //                                     {isLoading ? 'Signing up...' : 'Sign Up'}
 //                                 </button>
-//                                 <Link
-//                                     to="/"
-//                                     className="text-[#01b4e4] hover:text-[#0099ca]"
-//                                 >
+//                                 <Link to="/" className="text-[#01b4e4] hover:text-[#0099ca]">
 //                                     Cancel
 //                                 </Link>
 //                             </div>
 //                         </form>
+
+//                         {isVerificationEmailSent && (
+//                             <div className="mt-6">
+//                                 <button
+//                                     onClick={sendVerificationEmail}
+//                                     className="px-4 py-2 bg-[#01b4e4] hover:bg-[#0099ca] text-white rounded font-semibold"
+//                                 >
+//                                     Send Verification Email
+//                                 </button>
+//                             </div>
+//                         )}
 //                     </div>
 //                 </div>
 //             </div>
@@ -198,7 +208,7 @@
 
 // export default SignUp;
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AuthProvider from '../../providers/AutherProvider';
 import { Check } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
@@ -213,7 +223,17 @@ const SignUp = () => {
         email: ''
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [isVerificationEmailSent, setIsVerificationEmailSent] = useState(false);
+    const [existingEmail, setExistingEmail] = useState('');
     const navigate = useNavigate();
+
+    // Cleanup khi component unmount
+    useEffect(() => {
+        return () => {
+            setIsVerificationEmailSent(false);
+            setExistingEmail('');
+        };
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -239,21 +259,39 @@ const SignUp = () => {
             });
 
             if (response && response.id) {
-                toast.success("Signup successful!");
+                toast.success("Signup successful! Please verify your email to activate your account.");
+                setExistingEmail(formData.email);
                 setFormData({ name: '', password: '', confirmPassword: '', email: '' });
+                setIsVerificationEmailSent(true);
             }
-            console.log("print response signup", response)
         } catch (err) {
-            const errorMessage = err.response?.data?.message || err.message || "An error occurred";
-            toast.error(errorMessage);
+            if (err.message?.includes("User is existed in system")) {
+                toast.warning("This email is already registered. Please verify your email or login if already verified.");
+                setExistingEmail(formData.email);
+                setIsVerificationEmailSent(true);
+                setFormData({ name: '', password: '', confirmPassword: '', email: '' });
+            } else {
+                toast.error(err.message || "An error occurred during sign up");
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
+    const sendVerificationEmail = async () => {
+        if (!existingEmail) return;
+
+        try {
+            await AuthProvider.sendVerifyEmail(existingEmail);
+            toast.success("Verification email sent! Please check your inbox.");
+        } catch (err) {
+            toast.error("Failed to send verification email. Please try again later.");
+        }
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
+        setFormData(prevData => ({
             ...prevData,
             [name]: value,
         }));
@@ -271,10 +309,15 @@ const SignUp = () => {
 
     return (
         <div className="pt-20 pb-8 flex items-center justify-center bg-gray-100">
-            <ToastContainer />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                closeOnClick
+                pauseOnHover
+            />
             <div className="w-full max-w-[1300px] mx-auto px-10">
                 <div className="flex gap-8">
-                    {/* Left Side - Benefits */}
                     <div className="w-[300px] shrink-0">
                         <div className="bg-[#01b4e4] rounded overflow-hidden">
                             <h3 className="text-xl text-white font-bold p-5 pb-0">
@@ -290,8 +333,6 @@ const SignUp = () => {
                             </ul>
                         </div>
                     </div>
-
-                    {/* Right Side - Form */}
                     <div className="flex-1 max-w-3xl">
                         <h2 className="text-2xl font-semibold mb-4 text-black">
                             Sign up for an account
@@ -301,76 +342,104 @@ const SignUp = () => {
                             JavaScript is required to continue.
                         </p>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label className="block text-gray-700 mb-2">Username</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
-                                    required
-                                />
-                            </div>
+                        {!isVerificationEmailSent ? (
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Username</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                        required
+                                    />
+                                </div>
 
-                            <div>
-                                <label className="block text-gray-700 mb-2">
-                                    Password (at least 6 characters, including letters and numbers)
-                                </label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
-                                    required
-                                />
-                            </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-2">
+                                        Password (at least 6 characters, including letters and numbers)
+                                    </label>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                        required
+                                    />
+                                </div>
 
-                            <div>
-                                <label className="block text-gray-700 mb-2">Confirm Password</label>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
-                                    required
-                                />
-                            </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Confirm Password</label>
+                                    <input
+                                        type="password"
+                                        name="confirmPassword"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                        required
+                                    />
+                                </div>
 
-                            <div>
-                                <label className="block text-gray-700 mb-2">Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
-                                    required
-                                />
-                            </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4] bg-white text-black"
+                                        required
+                                    />
+                                </div>
 
-                            <p className="text-gray-600 text-sm">
-                                By clicking the "Sign up" button below, I certify that I have read and agree to the TMDB
-                                terms of use and privacy policy.
-                            </p>
+                                <p className="text-gray-600 text-sm">
+                                    By clicking the "Sign up" button below, I certify that I have read and agree to the TMDB
+                                    terms of use and privacy policy.
+                                </p>
 
-                            <div className="flex items-center gap-4">
-                                <button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 rounded font-semibold transition-colors text-black ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                                        }`}
-                                >
-                                    {isLoading ? 'Signing up...' : 'Sign Up'}
-                                </button>
-                                <Link to="/" className="text-[#01b4e4] hover:text-[#0099ca]">
-                                    Cancel
-                                </Link>
+                                <div className="flex items-center gap-4">
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 rounded font-semibold transition-colors text-black ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                        {isLoading ? 'Signing up...' : 'Sign Up'}
+                                    </button>
+                                    <Link to="/" className="text-[#01b4e4] hover:text-[#0099ca]">
+                                        Cancel
+                                    </Link>
+                                </div>
+                            </form>
+                        ) : (
+                            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                <h3 className="text-lg font-semibold text-blue-900 mb-2">
+                                    Email Verification Required
+                                </h3>
+                                <p className="text-blue-800 mb-4">
+                                    The email address ({existingEmail}) is already registered. You have two options:
+                                </p>
+                                <div className="flex flex-col gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => sendVerificationEmail()}
+                                        className="px-4 py-2 bg-[#01b4e4] hover:bg-[#0099ca] text-white rounded font-semibold w-fit"
+                                    >
+                                        Resend Verification Email
+                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-blue-800">Already verified?</span>
+                                        <Link
+                                            to="/login"
+                                            className="text-[#01b4e4] hover:text-[#0099ca] font-semibold"
+                                        >
+                                            Login here
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
-                        </form>
+                        )}
                     </div>
                 </div>
             </div>

@@ -1,75 +1,47 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const ResendActivation = () => {
-    const [email, setEmail] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+const VerifyEmail = () => {
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token'); // Lấy token từ URL
+    const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        // Add your email resend logic here
-        console.log('Resending activation to:', email);
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
-    };
+    useEffect(() => {
+        const verifyEmail = async () => {
+            if (!token) {
+                toast.error('Token không hợp lệ hoặc không tồn tại.');
+                navigate('/'); // Quay về trang chủ nếu không có token
+                return;
+            }
+
+            try {
+                // Gửi yêu cầu xác nhận tới backend
+                const response = await axios.get('http://14.225.210.222:8081/api/v1/auth/verify', {
+                    params: { token },
+                });
+
+                if (response.status === 200) {
+                    toast.success(response.data.message || 'Xác nhận email thành công!');
+                    setTimeout(() => navigate('/login'), 3000); // Chuyển hướng đến trang đăng nhập sau 3 giây
+                }
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Xác nhận email thất bại.');
+            }
+        };
+
+        verifyEmail();
+    }, [token, navigate]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="w-full max-w-[1300px] mx-auto px-10 py-8">
-                <div className="max-w-[800px]">
-                    <h2 className="text-2xl font-semibold mb-4">
-                        Resend activation email
-                    </h2>
-
-                    <p className="text-gray-700 mb-8">
-                        Missing your account verification email? Enter your email below to have it resent.
-                    </p>
-
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label
-                                htmlFor="email"
-                                className="block text-gray-700 mb-2"
-                            >
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="What's your email?"
-                                className="w-full px-4 py-2 border border-gray-300 rounded
-                                         focus:outline-none focus:ring-1 focus:ring-[#01b4e4] focus:border-[#01b4e4]"
-                                required
-                            />
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className={`px-4 py-2 bg-[#E4E7EB] hover:bg-gray-300 
-                                          rounded font-semibold transition-colors
-                                          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                {isLoading ? 'Sending...' : 'Send'}
-                            </button>
-                            <Link
-                                to="/"
-                                className="text-[#01b4e4] hover:text-[#0099ca]"
-                            >
-                                Cancel
-                            </Link>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+            <ToastContainer />
+            <h2 className="text-xl font-semibold mb-4">Đang xác nhận email...</h2>
+            <p className="text-gray-600">Vui lòng chờ trong giây lát.</p>
         </div>
     );
 };
 
-export default ResendActivation;
+export default VerifyEmail;

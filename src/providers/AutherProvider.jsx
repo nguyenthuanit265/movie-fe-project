@@ -41,6 +41,45 @@ export const AuthProvider = {
             throw error;
         }
     },
+
+    sendVerifyEmail: async (email) => {
+        try {
+            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.RESEND_VERIFY}?email=${email}`, {
+                method: 'POST',
+                headers: DEFAULT_HEADERS
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to send verification email');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error during resend email verification:', error);
+            throw error;
+        }
+    },
+
+    verifyEmail: async (token) => {
+        try {
+            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.VERIFY}?token=${token}`, {
+                method: 'GET',
+                headers: DEFAULT_HEADERS
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Email verification failed');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error during email verification:', error);
+            throw error;
+        }
+    },
+
     resetPassword: async (email) => {
         try {
             const response = await fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.RESET_PASSWORD, {

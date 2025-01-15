@@ -1,250 +1,251 @@
-import React, {useEffect, useState} from 'react';
-import {Star, Heart, ListPlus, X} from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, Film, Heart, Calendar, Mail, MapPin, Link as LinkIcon } from 'lucide-react';
 
-// Rating Circle Component for Header
-const AverageRatingCircle = ({score, label}) => {
-    return (
-        <div className="flex flex-col items-center">
-            <div className="relative w-12 h-12">
-                <div
-                    className="absolute inset-0 rounded-full bg-[#032541] border-2 border-[#204529] flex items-center justify-center">
-                    <span className="text-white text-lg font-bold">{score}</span>
-                    <span className="text-white text-xs align-top">*</span>
-                </div>
-            </div>
-            <span className="text-white text-sm mt-1 text-center whitespace-nowrap">{label}</span>
-        </div>
+const ProfilePage = () => {
+    const [activeTab, setActiveTab] = useState('watchlist');
+    const mockUserData = {
+        username: "JohnDoe",
+        email: "john@example.com",
+        avatar_url: "/api/placeholder/150/150",
+        joinDate: "2023-01-15",
+        watchlist: [
+            {
+                id: 1,
+                title: "Inception",
+                poster_url: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+                release_date: "2010-07-16",
+                vote_average: 8.8,
+                user_rating: 4.5
+            },
+            {
+                id: 2,
+                title: "The Dark Knight",
+                poster_url: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+                release_date: "2008-07-18",
+                vote_average: 9.0,
+                user_rating: 5
+            },
+            {
+                id: 3,
+                title: "Interstellar",
+                poster_url: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+                release_date: "2014-11-07",
+                vote_average: 8.6,
+                user_rating: 4
+            }
+        ],
+        favorites: [
+            {
+                id: 1,
+                title: "Inception",
+                poster_url: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+                release_date: "2010-07-16",
+                vote_average: 8.8,
+                user_rating: 4.5
+            },
+            {
+                id: 2,
+                title: "The Dark Knight",
+                poster_url: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+                release_date: "2008-07-18",
+                vote_average: 9.0,
+                user_rating: 5
+            }
+        ],
+        ratings: [
+            {
+                id: 1,
+                title: "Inception",
+                poster_url: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+                release_date: "2010-07-16",
+                vote_average: 8.8,
+                rating: 4.5
+            },
+            {
+                id: 2,
+                title: "The Dark Knight",
+                poster_url: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+                release_date: "2008-07-18",
+                vote_average: 9.0,
+                rating: 5
+            },
+            {
+                id: 3,
+                title: "Interstellar",
+                poster_url: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+                release_date: "2014-11-07",
+                vote_average: 8.6,
+                rating: 4
+            }
+        ]
+    };
+
+    const { username, email, avatar_url, joinDate, watchlist, favorites, ratings } = mockUserData;
+
+    const stats = [
+        {
+            icon: <Film className="w-5 h-5" />,
+            label: 'Watchlist',
+            value: watchlist.length
+        },
+        {
+            icon: <Heart className="w-5 h-5" />,
+            label: 'Favorites',
+            value: favorites.length
+        },
+        {
+            icon: <Star className="w-5 h-5" />,
+            label: 'Rated Movies',
+            value: ratings.length
+        }
+    ];
+
+    const TabButton = ({ id, label, count }) => (
+        <button
+            onClick={() => setActiveTab(id)}
+            className={`px-6 py-3 font-medium text-sm rounded-lg transition-colors flex items-center
+                ${activeTab === id
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-500 hover:bg-gray-100'
+                }`}
+        >
+            {label}
+            <span className={`ml-2 px-2 py-0.5 rounded-full text-xs 
+                ${activeTab === id
+                    ? 'bg-white text-blue-500'
+                    : 'bg-gray-200 text-gray-600'
+                }`}>
+                {count}
+            </span>
+        </button>
     );
-};
 
-// Rating Bar Component
-const RatingBar = () => {
-    const ratings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    return (
-        <div className="flex gap-0.5">
-            {ratings.map(rating => (
-                <div key={rating}
-                     className="h-6 w-8 bg-gray-200 hover:bg-gray-300 cursor-pointer text-xs text-center pt-1">
-                    {rating}
+    const MovieList = ({ movies, showRating = false }) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {movies.map(movie => (
+                <div key={movie.id} className="relative group">
+                    <div className="relative aspect-[2/3] rounded-lg overflow-hidden">
+                        <img
+                            src={movie.poster_url}
+                            alt={movie.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        />
+                        {showRating && (
+                            <div className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-sm flex items-center">
+                                <Star className="w-4 h-4 mr-1" />
+                                {movie.rating || movie.user_rating}
+                            </div>
+                        )}
+                    </div>
                 </div>
             ))}
         </div>
     );
-};
-
-// Watchlist Item Component
-const WatchlistItem = ({movie}) => {
-    return (
-        <div className="flex gap-4 p-4 border-b border-gray-100">
-            <img
-                src={movie.posterPath}
-                alt={movie.title}
-                className="w-16 h-24 object-cover rounded"
-            />
-            <div className="flex-1">
-                <div className="flex items-start justify-between">
-                    <div>
-                        <h3 className="font-bold hover:text-[#01b4e4] cursor-pointer">
-                            {movie.title}
-                            <span className="text-gray-400 font-normal ml-2">({movie.originalTitle})</span>
-                        </h3>
-                        <p className="text-gray-500 text-sm">{movie.releaseDate}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded-full">
-                            <Star className="w-4 h-4"/>
-                        </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-full">
-                            <Heart className="w-4 h-4"/>
-                        </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-full">
-                            <ListPlus className="w-4 h-4"/>
-                        </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-full">
-                            <X className="w-4 h-4"/>
-                        </button>
-                    </div>
-                </div>
-                <p className="text-sm mt-2">{movie.overview}</p>
-            </div>
-        </div>
-    );
-};
-
-const Profile = () => {
-    const [selectedTab, setSelectedTab] = useState('overview');
-    const [userData, setUserData] = useState({
-        email: '',
-        joinDate: '',
-        movieRating: 0,
-        tvRating: 0
-    });
-
-    // Example watchlist data
-    const watchlistMovie = {
-        title: "Ad Vitam: Trọn đời",
-        originalTitle: "Ad Vitam",
-        releaseDate: "January 10, 2025",
-        posterPath: "https://media.themoviedb.org/t/p/w440_and_h660_face/dOpSxmD3FWfl6SK8SLXw9uwcO05.jpg",
-        overview: "Khi anh và người vợ đang mang thai bị tấn công tại nhà, cựu đặc vụ ưu tú nọ mắc kẹt trong cuộc săn người đầy chết chóc liên quan đến quá khứ đau thương của chính anh."
-    };
-
-    useEffect(() => {
-        // Get user data from localStorage
-        const email = localStorage.getItem('userEmail');
-        const joinDate = localStorage.getItem('joinDate') || 'May 2022';
-
-        setUserData({
-            email,
-            joinDate,
-            movieRating: 0,
-            tvRating: 0
-        });
-    }, []);
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-gray-50 pt-16">
             {/* Profile Header */}
-            <div className="min-h-[360px] mt-16 relative w-full bg-[#0d253f]">
-                {/* Background gradient lines */}
-                <div className="absolute top-0 left-0 right-0 h-64 overflow-hidden">
-                    {[...Array(20)].map((_, i) => (
-                        <div
-                            key={i}
-                            className="absolute h-full w-4 bg-[#1ed5a9]/20 -skew-x-[45deg] transform"
-                            style={{
-                                left: `${i * 8}%`,
-                                opacity: 0.1 + (i * 0.02)
-                            }}
-                        />
-                    ))}
-                </div>
+            <div className="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 text-white">
+                <div className="max-w-7xl mx-auto px-4 py-12">
+                    <div className="flex flex-col md:flex-row md:items-start gap-8">
+                        {/* Left Column - Avatar */}
+                        <div className="flex-shrink-0">
+                            <img
+                                src={avatar_url}
+                                alt={username}
+                                className="w-32 h-32 rounded-full object-cover border-4 border-white/20 shadow-xl"
+                            />
+                        </div>
 
-                {/* Header Content */}
-                <div className="relative w-full max-w-[1300px] mx-auto px-10 py-8 flex items-center gap-8">
-                    {/* Avatar */}
-                    <div
-                        className="w-24 h-24 rounded-full bg-[#91debb] flex items-center justify-center text-4xl font-bold">
-                        {userData.email?.charAt(0).toUpperCase()}
-                    </div>
+                        {/* Middle Column - User Info */}
+                        <div className="flex-grow">
+                            <h1 className="text-3xl font-bold text-white mb-2">{username}</h1>
 
-                    {/* User Info */}
-                    <div className="flex flex-1">
-                        <div>
-                            <h2 className="text-2xl text-white font-bold mb-1">
-                                {userData.email}
-                            </h2>
-                            <p className="text-gray-300">
-                                Thành viên kể từ {userData.joinDate}
+                            {/* Contact & Basic Info */}
+                            <div className="space-y-2 text-gray-300 mb-4">
+                                <div className="flex items-center gap-2">
+                                    <Mail className="w-4 h-4" />
+                                    <span>{email}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4" />
+                                    <span>New York, USA</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <LinkIcon className="w-4 h-4" />
+                                    <a href="#" className="text-blue-400 hover:text-blue-300">http://example.com</a>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="w-4 h-4" />
+                                    <span>Joined {new Date(joinDate).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+
+                            {/* Bio */}
+                            <p className="text-gray-300 mb-6">
+                                Movie enthusiast and critic. Love watching and reviewing films of all genres.
+                                Always looking for the next great story to experience.
                             </p>
-                        </div>
-                    </div>
 
-                    {/* Stats */}
-                    <div className="flex gap-6">
-                        <AverageRatingCircle
-                            score={userData.movieRating}
-                            label="Trung bình Điểm phim"
-                        />
-                        <AverageRatingCircle
-                            score={userData.tvRating}
-                            label="Trung bình Điểm TV"
-                        />
+                            {/* Stats */}
+                            <div className="grid grid-cols-3 gap-4 max-w-2xl">
+                                {stats.map((stat, index) => (
+                                    <div key={index} className="bg-white/10 backdrop-blur-sm p-4 rounded-lg text-center">
+                                        <div className="flex justify-center text-blue-400 mb-2">
+                                            {stat.icon}
+                                        </div>
+                                        <div className="text-2xl font-bold text-white">{stat.value}</div>
+                                        <div className="text-sm text-gray-300">{stat.label}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="bg-white border-b border-gray-200">
-                <div className="max-w-[1300px] mx-auto px-10">
-                    <nav className="flex gap-8">
-                        <button
-                            className={`py-4 relative ${
-                                selectedTab === 'overview'
-                                    ? 'text-black font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-[#01b4e4]'
-                                    : 'text-gray-500 hover:text-black'
-                            }`}
-                            onClick={() => setSelectedTab('overview')}
-                        >
-                            Overview
-                        </button>
-                        <button
-                            className={`py-4 relative ${
-                                selectedTab === 'discussions'
-                                    ? 'text-black font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-[#01b4e4]'
-                                    : 'text-gray-500 hover:text-black'
-                            }`}
-                            onClick={() => setSelectedTab('discussions')}
-                        >
-                            Thảo luận
-                        </button>
-                    </nav>
+            {/* Content Section */}
+            <div className="max-w-7xl mx-auto px-4 py-6">
+                {/* Tabs */}
+                <div className="flex flex-wrap gap-4 mb-6">
+                    <TabButton id="watchlist" label="Watchlist" count={watchlist.length} />
+                    <TabButton id="favorites" label="Favorites" count={favorites.length} />
+                    <TabButton id="ratings" label="Your Ratings" count={ratings.length} />
                 </div>
-            </div>
 
-            {/* Main Content */}
-            <div className="max-w-[1300px] mx-auto px-10 py-8">
-                {/* Stats Section */}
-                <div className="grid grid-cols-3 gap-8 mb-12">
-                    <div>
-                        <h3 className="text-xl font-semibold mb-4">Stats</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <h4 className="font-medium">Total Edits</h4>
-                                <p className="text-4xl text-[#1ed5a9] font-light">0</p>
+                {/* Content */}
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                    {activeTab === 'watchlist' && (
+                        <div>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-semibold">Your Watchlist</h2>
+                                <p className="text-gray-500">Movies to watch: {watchlist.length}</p>
                             </div>
-                            <div>
-                                <h4 className="font-medium">Total Ratings</h4>
-                                <p className="text-4xl text-[#1ed5a9] font-light">0</p>
-                            </div>
+                            <MovieList movies={watchlist} />
                         </div>
-                    </div>
-
-                    <div>
-                        <h3 className="text-xl font-semibold mb-4">Đánh giá tổng quan</h3>
-                        <RatingBar/>
-                    </div>
-
-                    <div>
-                        <h3 className="text-xl font-semibold mb-4">Thể loại được xem nhiều nhất</h3>
-                        <p className="text-gray-500">Bạn chưa đánh giá bất kỳ bộ phim hoặc chương trình TV nào.</p>
-                    </div>
-                </div>
-
-                {/* Watchlist Section */}
-                <div className="mb-12">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-semibold">Upcoming From Watchlist</h3>
-                        <a href="#" className="text-[#01b4e4] hover:text-[#0099ca]">
-                            Đi đến Danh sách theo dõi
-                        </a>
-                    </div>
-                    <WatchlistItem movie={watchlistMovie}/>
-                </div>
-
-                {/* Recent Discussions */}
-                <div className="mb-12">
-                    <h3 className="text-xl font-semibold mb-4">Recent Discussions</h3>
-                    <p className="text-gray-500 p-4 bg-gray-50 rounded">
-                        Bạn không xem bất kỳ cuộc thảo luận nào.
-                    </p>
-                </div>
-
-                {/* Recent Activity */}
-                <div>
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-semibold">Hoạt động gần đây</h3>
-                        <a href="#" className="text-[#01b4e4] hover:text-[#0099ca]">
-                            View More
-                        </a>
-                    </div>
-                    <p className="text-gray-500">
-                        Bạn chưa thực hiện bất kỳ chỉnh sửa gần đây.
-                    </p>
+                    )}
+                    {activeTab === 'favorites' && (
+                        <div>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-semibold">Your Favorite Movies</h2>
+                                <p className="text-gray-500">Favorite movies: {favorites.length}</p>
+                            </div>
+                            <MovieList movies={favorites} />
+                        </div>
+                    )}
+                    {activeTab === 'ratings' && (
+                        <div>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-semibold">Movies You've Rated</h2>
+                                <p className="text-gray-500">Rated movies: {ratings.length}</p>
+                            </div>
+                            <MovieList movies={ratings} showRating={true} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
     );
 };
 
-export default Profile;
+export default ProfilePage;

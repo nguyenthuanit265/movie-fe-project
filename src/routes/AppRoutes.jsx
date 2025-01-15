@@ -7,6 +7,7 @@ import Footer from "../components/layout/Footer";
 import Login from "../components/auth/Login";
 import SignUp from "../components/auth/SignUp";
 import ResendActivation from "../components/auth/ResendActivation";
+import VerifyEmail from "../components/auth/VerifyEmail";
 import ResetPasswordScreen1 from "../components/auth/ResetPasswordScreen1";
 import ResetPassword from "../components/auth/ResetPassword";
 import Profile from "../components/profile/Profile";
@@ -51,9 +52,9 @@ const AppRoutes = () => {
                             <SignUp />
                         </PublicRoute>
                     } />
-                    <Route path="/verify-email" element={
+                    <Route path="/verify" element={
                         <PublicRoute>
-                            <ResendActivation />
+                            <VerifyEmail />
                         </PublicRoute>
                     } />
                     <Route path="/forgot-password" element={
