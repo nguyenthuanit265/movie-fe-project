@@ -84,6 +84,7 @@ const TrendingSection = () => {
                                 <MovieCard
                                     key={movie.id}
                                     data={{
+                                        id: movie.id,
                                         title: movie.title,
                                         posterPath: movie.poster_url,
                                         releaseDate: movie.release_date,

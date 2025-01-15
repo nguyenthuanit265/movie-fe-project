@@ -34,11 +34,6 @@ const HomePage = () => {
             <section>
                 <JoinTodaySection />
             </section>
-
-            {/* Leaderboard */}
-            <section className="w-full bg-white">
-                <LeaderboardSection />
-            </section>
         </>
     );
 };

@@ -12,12 +12,28 @@ const Login = () => {
         password: ''
     });
     const [remainingAttempts, setRemainingAttempts] = useState(10);
+    const [validationError, setValidationError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { loading, error } = useSelector(state => state.auth);
 
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        if (!validateEmail(formData.email)) {
+            setValidationError('Email must be in the correct format (e.g. user@example.com).');
+            return;
+        }
+        if (!formData.password) {
+            setValidationError('Password cannot be blank.');
+            return;
+        }
+        setValidationError('');
         dispatch(loginStart());
 
         try {
@@ -25,9 +41,6 @@ const Login = () => {
                 email: formData.email,
                 password: formData.password
             });
-
-            console.log('Login response:', response);
-
             if (response && response.data) {
                 const userData = {
                     token: response.data.access_token,
@@ -45,11 +58,11 @@ const Login = () => {
             }
         } catch (err) {
             setRemainingAttempts(prev => prev - 1);
-            const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+            const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
             dispatch(loginFailure(errorMessage));
-            console.error('Login error:', err);
         }
     };
+
 
     const handleGoogleLogin = async () => {
         dispatch(loginStart());
@@ -58,7 +71,6 @@ const Login = () => {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
 
-            // Thử đăng nhập với API hiện tại
             try {
                 const response = await AuthProvider.login({
                     email: user.email,
@@ -81,7 +93,6 @@ const Login = () => {
                     navigate('/profile');
                 }
             } catch (err) {
-                // Nếu đăng nhập thất bại, thử đăng ký tài khoản mới
                 try {
                     await AuthProvider.signup({
                         email: user.email,
@@ -89,7 +100,6 @@ const Login = () => {
                         password: user.uid
                     });
 
-                    // Sau khi đăng ký thành công, thử đăng nhập lại
                     const loginResponse = await AuthProvider.login({
                         email: user.email,
                         password: user.uid
@@ -124,43 +134,40 @@ const Login = () => {
                 <div className="max-w-[800px]">
                     <h2 className="text-2xl font-semibold mb-4 text-black">Login to your account</h2>
 
+                    {/* Instructions */}
                     <p className="text-gray-700 mb-8">
-                        In order to use the editing and rating capabilities of TMDB, as well as get personal
-                        recommendations
-                        you will need to login to your account. If you do not have an account, registering for an
-                        account is
-                        free and simple.{' '}
+                        To use the full features of our app, login or{' '}
                         <Link to="/signup" className="text-[#01b4e4] hover:text-[#0099ca]">
-                            Click here
-                        </Link>{' '}
-                        to get started.
+                            sign up for free
+                        </Link>.
                     </p>
 
-                    <p className="text-gray-700 mb-8">
-                        If you signed up but didn't get your verification email,{' '}
-                        <Link to="/verify-email" className="text-[#01b4e4] hover:text-[#0099ca]">
-                            click here
-                        </Link>{' '}
-                        to have it resent.
-                    </p>
+                    {/* Validation Error */}
+                    {validationError && (
+                        <div className="mb-4 text-red-600">
+                            {validationError}
+                        </div>
+                    )}
 
+                    {/* Login Error */}
                     {error && (
                         <div className="mb-6 bg-[#dc3545] text-white rounded overflow-hidden">
                             <div className="px-4 py-3 font-semibold bg-[#dc3545] border-b border-[#dc3545]/20">
-                                There was a problem
+                                Error
                             </div>
                             <div className="px-4 py-3 bg-white/10">
                                 <ul className="list-disc ml-4 space-y-1">
-                                    <li>We couldn't validate your information. Want to try again?</li>
-                                    <li>You have {remainingAttempts} remaining login attempts.</li>
+                                    <li>{error}</li>
+                                    <li>{remainingAttempts} remaining login attempts.</li>
                                 </ul>
                             </div>
                         </div>
                     )}
 
+                    {/* Form */}
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div>
-                            <label className="block text-gray-700 mb-2">Username</label>
+                            <label className="block text-gray-700 mb-2">Email</label>
                             <input
                                 type="text"
                                 value={formData.email}
@@ -189,7 +196,7 @@ const Login = () => {
                                       rounded font-semibold transition-colors
                                       ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {loading ? 'Logging in...' : 'Đăng nhập'}
+                                {loading ? 'Logging in...' : 'Login'}
                             </button>
                             <Link
                                 to="/forgot-password"
@@ -198,6 +205,8 @@ const Login = () => {
                                 Reset password
                             </Link>
                         </div>
+
+                        {/* Google Login */}
                         <button
                             type="button"
                             onClick={handleGoogleLogin}
@@ -209,7 +218,7 @@ const Login = () => {
                                 alt="Google"
                                 className="w-5 h-5"
                             />
-                            <span>Đăng nhập với Google</span>
+                            <span>Login with Google</span>
                         </button>
                     </form>
                 </div>
