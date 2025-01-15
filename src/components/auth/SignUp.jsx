@@ -209,7 +209,7 @@
 // export default SignUp;
 
 import React, { useState, useEffect } from "react";
-import AuthProvider from '../../providers/AutherProvider';
+import AuthProvider from '../../providers/AuthProvider';
 import { Check } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";

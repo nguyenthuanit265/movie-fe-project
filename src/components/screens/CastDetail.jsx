@@ -38,10 +38,10 @@ const CastDetail = () => {
     if (!cast) return null;
 
     return (
-        <div className="bg-gray-900 text-white pt-16">
+        <div className="bg-gray-900 text-white pt-16 pb-0">
             <div className="container mx-auto px-4">
                 {/* Cast Header */}
-                <div className="flex flex-col md:flex-row gap-12 mb-8">
+                <div className="flex flex-col md:flex-row gap-12 mb-0">
                     <img
                         src={cast.profile_path ? `https://image.tmdb.org/t/p/w500${cast.profile_path}` : '/placeholder.jpg'}
                         alt={cast.name}
@@ -58,7 +58,7 @@ const CastDetail = () => {
 
                 {/* Known For Movies */}
                 {cast.known_for && cast.known_for.length > 0 && (
-                    <div className="mb-6">
+                    <div className="mb-0">
                         <h3 className="text-2xl font-semibold mb-4">Known For</h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                             {cast.known_for.map((movie) => (
@@ -82,7 +82,7 @@ const CastDetail = () => {
 
                 {/* Social Links */}
                 {cast.imdb_id && (
-                    <div className="mb-6">
+                    <div className="mb-0">
                         <h3 className="text-2xl font-semibold mb-4">Social Links</h3>
                         <div className="flex gap-6">
                             <a

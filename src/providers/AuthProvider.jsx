@@ -124,6 +124,114 @@ export const AuthProvider = {
             throw error;
         }
     },
-};
 
+    getUserFavorite: async (token) => {
+        try {
+            if (!token) {
+                throw new Error("Access token is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PROFILE_FAVORITE}`, {
+                method: 'GET',
+                headers,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to fetch user profile');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            throw error;
+        }
+    },
+    getUserRating: async (token) => {
+        try {
+            if (!token) {
+                throw new Error("Access token is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PROFILE_RATING}`, {
+                method: 'GET',
+                headers,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to fetch user profile');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            throw error;
+        }
+    },
+    getUserWatchList: async (token) => {
+        try {
+            if (!token) {
+                throw new Error("Access token is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PROFILE_WATCHLIST}`, {
+                method: 'GET',
+                headers,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to fetch user profile');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            throw error;
+        }
+    },
+    getUserProfile: async (token) => {
+        try {
+            if (!token) {
+                throw new Error("Access token is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PROFILE}`, {
+                method: 'GET',
+                headers,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to fetch user profile');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            throw error;
+        }
+    },
+};
 export default AuthProvider;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
-import AuthProvider from '../../providers/AutherProvider';
+import AuthProvider from '../../providers/AuthProvider';
 import { auth } from '../../config/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 

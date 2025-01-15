@@ -180,7 +180,7 @@ const MovieDetailUI = ({ movie, onUpdateMovie }) => {
                                 </div>
 
                                 <div
-                                    className={`w-12 h-12 rounded-full bg-gray-900/60 flex items-center justify-center cursor-pointer ${isInWatchlist ? 'bg-blue-500' : 'hover:bg-gray-800'
+                                    className={`w-12 h-12 rounded-full bg-gray-900/60 flex items-center justify-center cursor-pointer ${isInWatchlist ? 'bg-sky-500' : 'hover:bg-gray-800'
                                         }`}
                                     onClick={handleAddWatchList}
                                 >

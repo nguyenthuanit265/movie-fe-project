@@ -8,6 +8,10 @@ export const API_CONFIG = {
         MOVIES_TRENDING: '/api/v1/movies/trending',
         RESEND_VERIFY: '/api/v1/auth/verify/resend',
         VERIFY: '/api/v1/auth/verify',
+        PROFILE: '/api/users/profile',
+        PROFILE_FAVORITE: '/api/users/profile/favorites',
+        PROFILE_WATCHLIST: '/api/users/profile/watchlist',
+        PROFILE_RATING: '/api/users/profile/ratings',
     }
 };
 

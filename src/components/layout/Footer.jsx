@@ -3,7 +3,7 @@ import React from "react";
 const TMDBLogo = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" className="w-[150px]">
         {/* Background shapes */}
-        <rect x="10" y="20" width="280" height="60" rx="30" fill="#032541"/>
+        <rect x="10" y="20" width="280" height="60" rx="30" fill="#032541" />
 
         {/* THE MOVIE DB text */}
         <g transform="translate(30, 60)">
@@ -40,24 +40,24 @@ const TMDBLogo = () => (
         </g>
 
         {/* Decorative bars */}
-        <rect x="30" y="70" width="240" height="4" rx="2" fill="#90cea1" opacity="0.8"/>
-        <rect x="30" y="25" width="240" height="4" rx="2" fill="#01b4e4" opacity="0.8"/>
+        <rect x="30" y="70" width="240" height="4" rx="2" fill="#90cea1" opacity="0.8" />
+        <rect x="30" y="25" width="240" height="4" rx="2" fill="#01b4e4" opacity="0.8" />
 
         {/* Accent circles */}
-        <circle cx="270" cy="50" r="15" fill="#01b4e4" opacity="0.2"/>
-        <circle cx="270" cy="50" r="10" fill="#90cea1" opacity="0.4"/>
-        <circle cx="270" cy="50" r="5" fill="#01b4e4"/>
+        <circle cx="270" cy="50" r="15" fill="#01b4e4" opacity="0.2" />
+        <circle cx="270" cy="50" r="10" fill="#90cea1" opacity="0.4" />
+        <circle cx="270" cy="50" r="5" fill="#01b4e4" />
     </svg>
 );
 
 // Footer Component
 const Footer = () => (
-    <footer className="bg-[#04223b] px-10 py-20">
+    <footer className="bg-[#04223b] px-10 pt-12 pb-20 mt-0">
         <div className="max-w-6xl mx-auto grid grid-cols-5 gap-8">
             {/* Logo Column */}
             <div className="col-span-1">
                 <div className="mb-4">
-                    <TMDBLogo/>
+                    <TMDBLogo />
                 </div>
                 <button className="bg-white text-[#01b4e4] px-4 py-2 rounded-md font-bold">
                     JOIN THE COMMUNITY

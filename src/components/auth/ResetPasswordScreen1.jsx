@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import AuthProvider from '../../providers/AutherProvider';
+import AuthProvider from '../../providers/AuthProvider';
 
 const ResetPasswordScreen1 = () => {
     const [email, setEmail] = useState('');
