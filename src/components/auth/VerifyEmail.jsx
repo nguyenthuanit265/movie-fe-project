@@ -11,7 +11,7 @@ const VerifyEmail = () => {
     useEffect(() => {
         const verifyEmail = async () => {
             const token = searchParams.get('token');
-
+            console.log('tokenverify', token);
             if (!token) {
                 setVerificationStatus('error');
                 toast.error('Invalid verification link');
@@ -22,7 +22,7 @@ const VerifyEmail = () => {
                 await AuthProvider.verifyEmail(token);
                 setVerificationStatus('success');
                 toast.success('Email verified successfully! You can now login.');
-                // Chuyển hướng đến trang login sau 3 giây
+
                 setTimeout(() => {
                     navigate('/login');
                 }, 3000);

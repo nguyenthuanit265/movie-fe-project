@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../store/authSlice'; // Cập nhật đường dẫn nếu cần
+import { loginSuccess } from '../store/authSlice';
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Login from "../components/auth/Login";
 import SignUp from "../components/auth/SignUp";
-import ResendActivation from "../components/auth/ResendActivation";
 import VerifyEmail from "../components/auth/VerifyEmail";
 import ResetPasswordScreen1 from "../components/auth/ResetPasswordScreen1";
 import ResetPassword from "../components/auth/ResetPassword";

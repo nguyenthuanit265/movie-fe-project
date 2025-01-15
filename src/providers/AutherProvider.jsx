@@ -100,25 +100,27 @@ export const AuthProvider = {
         }
     },
 
-    confirmResetPassword: async (token, newPassword) => {
+    confirmResetPassword: async (token, newPassword, confirmPassword) => {
         try {
-            const response = await fetch(
-                API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.RESET_PASSWORD_CONFIRM,
-                {
-                    method: 'POST',
-                    headers: DEFAULT_HEADERS,
-                    body: JSON.stringify({ token, newPassword }),
-                }
-            );
+            const response = await fetch(`${API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.RESET_PASSWORD_CONFIRM}?token=${token}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    new_password: newPassword,
+                    confirm_password: confirmPassword,
+                }),
+            });
 
             if (!response.ok) {
                 const errorResponse = await response.json();
-                throw new Error(errorResponse.message || 'Password reset confirmation failed');
+                throw new Error(errorResponse.message || 'Password reset failed');
             }
 
             return await response.json();
         } catch (error) {
-            console.error('Error during password reset confirmation:', error);
+            console.error('Error during password reset:', error);
             throw error;
         }
     },
