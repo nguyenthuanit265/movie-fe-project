@@ -51,11 +51,6 @@ const Header = () => {
         navigate('/');
     };
 
-    const navItems = {
-        Movies: ['Popular', 'Now Playing', 'Upcoming', 'Top Rated'],
-        People: ['Popular People'],
-    };
-
     return (
         <header className="fixed top-0 left-0 right-0 z-50 w-full">
             <nav className="bg-[#032541]">
@@ -67,11 +62,6 @@ const Header = () => {
                                 <h1 className="text-[#01b4e4] text-2xl font-bold">TMDB</h1>
                                 <div className="ml-2 w-12 h-6 bg-[#01b4e4] rounded-lg"></div>
                             </div>
-                            <nav className="flex items-center gap-6">
-                                {Object.entries(navItems).map(([label, items]) => (
-                                    <NavItem key={label} label={label} items={items} />
-                                ))}
-                            </nav>
                         </div>
 
 

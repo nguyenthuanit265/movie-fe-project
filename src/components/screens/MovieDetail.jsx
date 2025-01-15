@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import MovieDetailUI from "./MovieDetailUI";
 import CastCard from "../common/CastCard.jsx";
+import RecommendationsSection from "../sections/Recomend.jsx";
 import MovieProvider from "../../providers/MovieProvider.jsx";
 import { useSelector } from 'react-redux';
 
@@ -13,6 +14,7 @@ const MovieDetail = () => {
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState("");
     const token = useSelector((state) => state.auth.token);
+
     useEffect(() => {
         const fetchMovieDetails = async (movieId) => {
             try {
@@ -32,7 +34,7 @@ const MovieDetail = () => {
             setError('Movie ID is required');
             setLoading(false);
         }
-    }, [id]);
+    }, [id, token]);
 
     const handleAddReview = () => {
         if (newReview.trim()) {
@@ -50,8 +52,9 @@ const MovieDetail = () => {
     }
 
     return movie ? (
-        <div className="bg-white py-8">
-            <div className="container mx-auto px-4">
+        <div className="w-full bg-white">
+            {/* Hero Section - Full width */}
+            <div className="w-full">
                 {movie && (
                     <MovieDetailUI
                         movie={movie}
@@ -63,29 +66,37 @@ const MovieDetail = () => {
                         }
                     />
                 )}
+            </div>
+
+            {/* Content Section - Max width container */}
+            <div className="max-w-[1440px] mx-auto px-4">
+                {/* Cast Section */}
                 {movie.casts && movie.casts.length > 0 && (
-                    <CastCard casts={movie.casts} />
+                    <div className="mt-4">
+                        <h2 className="text-xl font-semibold mb-2">Actors in the Movie</h2>
+                        <CastCard casts={movie.casts} />
+                    </div>
                 )}
 
-
-                <div className="bg-white mt-8 p-4 rounded-lg shadow-md">
+                {/* Reviews Section */}
+                <div className="mt-6 p-4 rounded-lg bg-slate-50">
                     <h2 className="text-xl font-semibold mb-4">Reviews</h2>
                     <div>
                         {reviews.length > 0 ? (
                             <ul className="space-y-4">
                                 {reviews.map((review, index) => (
-                                    <li key={index} className="p-4 bg-gray-100 rounded-lg">
+                                    <li key={index} className="p-4 bg-white rounded-lg shadow-sm">
                                         {review}
                                     </li>
                                 ))}
                             </ul>
                         ) : (
-                            <p>No reviews yet. Be the first to review!</p>
+                            <p className="text-gray-600">No reviews yet. Be the first to review!</p>
                         )}
 
                         <div className="mt-4">
                             <textarea
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                                 rows="3"
                                 value={newReview}
                                 onChange={(e) => setNewReview(e.target.value)}
@@ -99,6 +110,13 @@ const MovieDetail = () => {
                             </button>
                         </div>
                     </div>
+                </div>
+
+                <div className="mt-6 mb-8">
+                    <RecommendationsSection
+                        movieId={id}
+                        token={token}
+                    />
                 </div>
             </div>
         </div>

@@ -101,24 +101,35 @@ export const MovieProvider = {
         }
     },
 
-    getCast: async (movieId) => {
+    getDetailCast: async (id, token = null) => {
         try {
-            const response = await fetch(`${API_CONFIG.BASE_URL}/api/movies/${movieId}/cast`, {
+            if (!id) {
+                throw new Error("Cast ID is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                ...(token && { Authorization: `Bearer ${token}` }),
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL}/api/casts/${id}/detail`, {
                 method: 'GET',
-                headers: DEFAULT_HEADERS,
+                headers,
+                credentials: 'include',
             });
 
             if (!response.ok) {
                 const errorResponse = await response.json();
-                throw new Error(errorResponse.message || 'Failed to fetch movie cast');
+                throw new Error(errorResponse.message || `Failed to fetch details for cast with ID: ${id}`);
             }
 
             return await response.json();
         } catch (error) {
-            console.error('Error fetching cast:', error);
+            console.error(`Error fetching cast details for ID ${id}:`, error);
             throw error;
         }
     },
+
     addWatchList: async (movieId, token) => {
         try {
             if (!movieId || !token) {
@@ -208,8 +219,66 @@ export const MovieProvider = {
             throw error;
         }
     },
+    getSimilarMovies: async (movieId, token = null) => {
+        try {
+            if (!movieId) {
+                throw new Error("Movie ID is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+            };
+
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${API_CONFIG.BASE_URL}/api/movies/${movieId}/recommendations`, {
+                method: 'GET',
+                headers,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || `Failed to get recommendations for movie with ID ${movieId}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error(`Error getting recommendations for movie ID ${movieId}:`, error);
+            throw error;
+        }
+    },
+
+    getUserRecommendations: async (token) => {
+        try {
+            if (!token) {
+                throw new Error("Access token is required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL}/api/movies/recommendations/user`, {
+                method: 'GET',
+                headers,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to get user recommendations');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error getting user recommendations:', error);
+            throw error;
+        }
+    }
 };
-
-
 
 export default MovieProvider;
