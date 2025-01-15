@@ -52,14 +52,15 @@ const MovieDetail = () => {
     return movie ? (
         <div className="bg-white py-8">
             <div className="container mx-auto px-4">
-                {/* <MovieDetailUI movie={movie} />
-                {movie.casts && movie.casts.length > 0 && (
-                    <CastCard casts={movie.casts} />
-                )} */}
                 {movie && (
                     <MovieDetailUI
                         movie={movie}
-                        onUpdateMovie={(updatedMovie) => setMovie((prev) => ({ ...prev, ...updatedMovie }))}
+                        onUpdateMovie={(updatedFields) =>
+                            setMovie((prev) => ({
+                                ...prev,
+                                ...updatedFields,
+                            }))
+                        }
                     />
                 )}
                 {movie.casts && movie.casts.length > 0 && (

@@ -127,7 +127,7 @@ export const MovieProvider = {
 
             const headers = {
                 ...DEFAULT_HEADERS,
-                Authorization: `Bearer ${token}`, // Token bắt buộc
+                Authorization: `Bearer ${token}`,
             };
 
             const response = await fetch(`${API_CONFIG.BASE_URL}/api/movies/${movieId}/watchlist`, {
@@ -185,7 +185,7 @@ export const MovieProvider = {
 
             const headers = {
                 ...DEFAULT_HEADERS,
-                Authorization: `Bearer ${token}`, // Token bắt buộc
+                Authorization: `Bearer ${token}`,
             };
 
             const body = JSON.stringify({ rating });
