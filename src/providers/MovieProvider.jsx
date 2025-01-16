@@ -1,7 +1,6 @@
 import { API_CONFIG, DEFAULT_HEADERS } from '../config/config';
-
+import axios from "axios";
 export const MovieProvider = {
-
     getTrending: async (timeWindow) => {
         try {
             const endpoint =
@@ -179,6 +178,43 @@ export const MovieProvider = {
         }
     },
 
+    addReview: async (reviewData, token) => {
+        try {
+
+            if (!reviewData || !reviewData.movie_id || !token) {
+                throw new Error("Review data (including movie ID) and access token are required");
+            }
+
+            const headers = {
+                ...DEFAULT_HEADERS,
+                Authorization: `Bearer ${token}`,
+            };
+
+            const response = await fetch(`${API_CONFIG.BASE_URL}/api/v1/reviews/manage`, {
+                method: 'POST',
+                headers,
+                credentials: 'include',
+                body: JSON.stringify({
+                    action: "add",
+                    movie_id: reviewData.movie_id,
+                    content: reviewData.content,
+                    rating: reviewData.rating,
+                }),
+            });
+
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || `Failed to add review for movie ID ${reviewData.movie_id}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error(`Error adding review for movie ID ${reviewData.movie_id}:`, error);
+            throw error;
+        }
+    },
+
     addFavorite: async (movieId, token) => {
         try {
             if (!movieId || !token) {
@@ -298,7 +334,59 @@ export const MovieProvider = {
             console.error('Error getting user recommendations:', error);
             throw error;
         }
-    }
+    },
+    updateReview: async (movieId, updatedContent, updatedRating, token) => {
+        try {
+            if (!movieId || !updatedContent || !updatedRating || !token) {
+                throw new Error("All parameters are required for updating a review");
+            }
+
+            const response = await fetch("http://14.225.210.222:8081/api/v1/reviews/manage", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    action: "update",
+                    movie_id: movieId,
+                    content: updatedContent,
+                    rating: updatedRating,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || "Failed to update review");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error updating review:", error);
+            throw error;
+        }
+    },
+    deleteReview: async (movieId, token) => {
+        try {
+            const response = await axios.post(
+                "http://14.225.210.222:8081/api/v1/reviews/manage",
+                {
+                    action: "delete",
+                    movie_id: movieId,  // Gửi movie_id để xóa tất cả đánh giá liên quan đến movie_id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error deleting review:", error);
+            throw error;
+        }
+    },
+
 };
 
 export default MovieProvider;
