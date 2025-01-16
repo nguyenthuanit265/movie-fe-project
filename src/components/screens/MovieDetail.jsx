@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import MovieDetailUI from "./MovieDetailUI";
+import MovieDetailUI from "../common/MovieDetailUI.jsx";
 import CastCard from "../common/CastCard.jsx";
 import RecommendationsSection from "../sections/Recomend.jsx";
 import MovieProvider from "../../providers/MovieProvider.jsx";

@@ -8,7 +8,6 @@ const RecommendationsSection = ({ movieId, token }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isFading, setIsFading] = useState(false);
 
-    // Fetch dữ liệu recommendations
     const fetchRecommendations = async () => {
         setIsLoading(true);
         try {
@@ -46,13 +45,13 @@ const RecommendationsSection = ({ movieId, token }) => {
             {/* Header */}
             <div className="max-w-[1170px] mx-auto flex items-center gap-5 mb-6">
                 <h2 className="text-xl font-semibold text-black">Recommendations</h2>
-                {token && ( // Chỉ hiện tabs khi đã đăng nhập
+                {token && (
                     <div className="inline-flex rounded-full border border-[#032541] p-1">
                         <button
                             onClick={() => handleTabChange("related")}
                             className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${activeTab === "related"
-                                    ? "bg-[#032541] text-white"
-                                    : "bg-white text-[#032541]"
+                                ? "bg-[#032541] text-white"
+                                : "bg-white text-[#032541]"
                                 }`}
                         >
                             Related Movies
@@ -60,8 +59,8 @@ const RecommendationsSection = ({ movieId, token }) => {
                         <button
                             onClick={() => handleTabChange("foryou")}
                             className={`px-5 py-1 rounded-full text-sm font-semibold transition-colors ${activeTab === "foryou"
-                                    ? "bg-[#032541] text-white"
-                                    : "bg-white text-[#032541]"
+                                ? "bg-[#032541] text-white"
+                                : "bg-white text-[#032541]"
                                 }`}
                         >
                             For You

@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React from 'react';
 import PanelSection from "../sections/PannelSection";
 import TrendingSection from "../sections/TrendingSection";

@@ -45,7 +45,7 @@ const PanelSection = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                             <button
-                                onClick={handleSearch} // Gọi hàm handleSearch
+                                onClick={handleSearch}
                                 className="absolute right-0 top-0 h-full px-8 bg-gradient-to-r from-[#1ed5a9] to-[#01b4e4] text-white font-semibold rounded-full">
                                 Search
                             </button>

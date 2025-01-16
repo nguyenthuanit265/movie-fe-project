@@ -7,11 +7,10 @@ const LatestTrailersSection = () => {
     const [trailers, setTrailers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Hàm fetch dữ liệu
     const fetchTrailers = async () => {
         setIsLoading(true);
         try {
-            const result = await MovieProvider.getTrailers(); // Gọi API từ provider
+            const result = await MovieProvider.getTrailers();
             if (result.data && result.data.content) {
                 setTrailers(result.data.content);
             }

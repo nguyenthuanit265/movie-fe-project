@@ -7,8 +7,8 @@ const SearchResultPage = () => {
     const [results, setResults] = useState([]);
     const [filteredResults, setFilteredResults] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState("all"); // "all", "movie", "person"
-    const [sort, setSort] = useState("name-asc"); // "name-asc", "name-desc", "date", "popularity"
+    const [filter, setFilter] = useState("all");
+    const [sort, setSort] = useState("name-asc");
 
     useEffect(() => {
         const fetchSearchResults = async () => {
@@ -26,16 +26,16 @@ const SearchResultPage = () => {
         fetchSearchResults();
     }, [query]);
 
-    // Apply filters
+
     useEffect(() => {
         let filtered = [...results];
 
-        // Filter by media_type
+
         if (filter !== "all") {
             filtered = filtered.filter((item) => item.media_type === filter);
         }
 
-        // Sort by selected criteria
+
         switch (sort) {
             case "name-asc":
                 filtered.sort((a, b) =>

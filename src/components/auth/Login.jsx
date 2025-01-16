@@ -74,7 +74,7 @@ const Login = () => {
             try {
                 const response = await AuthProvider.login({
                     email: user.email,
-                    password: user.uid // Sử dụng UID từ Google làm password
+                    password: user.uid
                 });
 
                 if (response && response.data) {

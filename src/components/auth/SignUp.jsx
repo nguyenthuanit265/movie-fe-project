@@ -16,8 +16,6 @@ const SignUp = () => {
     const [isVerificationEmailSent, setIsVerificationEmailSent] = useState(false);
     const [existingEmail, setExistingEmail] = useState('');
     const navigate = useNavigate();
-
-    // Cleanup khi component unmount
     useEffect(() => {
         return () => {
             setIsVerificationEmailSent(false);

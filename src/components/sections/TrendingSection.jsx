@@ -8,7 +8,6 @@ const TrendingSection = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isFading, setIsFading] = useState(false);
 
-    // Hàm fetch dữ liệu
     const fetchMovies = async () => {
         setIsLoading(true);
         try {
@@ -24,11 +23,11 @@ const TrendingSection = () => {
     };
 
     const handleTimeWindowChange = (newTimeWindow) => {
-        setIsFading(true); // Kích hoạt fade-out
+        setIsFading(true);
         setTimeout(() => {
             setTimeWindow(newTimeWindow);
-            setIsFading(false); // Kích hoạt fade-in sau khi cập nhật trạng thái
-        }, 300); // Thời gian hiệu ứng fade-out
+            setIsFading(false);
+        }, 300);
     };
 
     useEffect(() => {
@@ -73,7 +72,7 @@ const TrendingSection = () => {
                         className={`overflow-x-auto transition-opacity duration-300 ${isFading ? "opacity-0 hidden-opacity" : "opacity-100 visible-opacity"
                             }`}
                         style={{
-                            minHeight: "300px", // Đặt chiều cao tối thiểu để tránh chèn
+                            minHeight: "300px",
                             msOverflowStyle: "none",
                             scrollbarWidth: "none",
                             WebkitOverflowScrolling: "touch",
