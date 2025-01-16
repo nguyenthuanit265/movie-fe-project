@@ -72,6 +72,26 @@ export const MovieProvider = {
         }
     },
 
+    getSearch: async (query) => {
+        try {
+            const response = await fetch(`${API_CONFIG.BASE_URL}/api/v1/search/multi?query=${encodeURIComponent(query)}`, {
+                method: 'GET',
+                headers: DEFAULT_HEADERS,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.message || 'Failed to fetch search results');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+            throw error;
+        }
+    },
+
     getDetailMovie: async (id, token = null) => {
         try {
             if (!id) {

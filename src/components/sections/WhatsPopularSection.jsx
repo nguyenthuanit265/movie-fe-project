@@ -3,20 +3,19 @@ import MovieCard from "../common/MovieCard.jsx";
 import MovieProvider from "../../providers/MovieProvider.jsx";
 
 const WhatsPopularSection = () => {
-    const [filter, setFilter] = useState("all"); // Bổ sung filter mặc định
-    const [allMovies, setAllMovies] = useState([]); // Lưu toàn bộ dữ liệu từ API
-    const [movies, setMovies] = useState([]); // Dữ liệu hiển thị sau khi lọc
+    const [filter, setFilter] = useState("all");
+    const [allMovies, setAllMovies] = useState([]);
+    const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFading, setIsFading] = useState(false);
 
-    // Hàm fetch dữ liệu từ API
     const fetchMovies = async () => {
         setIsLoading(true);
         try {
             const result = await MovieProvider.getPopular();
             if (result.data && result.data.content) {
-                setAllMovies(result.data.content); // Lưu toàn bộ dữ liệu gốc
-                setMovies(result.data.content); // Hiển thị mặc định
+                setAllMovies(result.data.content);
+                setMovies(result.data.content);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -25,35 +24,34 @@ const WhatsPopularSection = () => {
         }
     };
 
-    // Hàm xử lý lọc và sắp xếp dựa trên filter
     const applyFilter = (newFilter) => {
-        let filteredMovies = [...allMovies]; // Tạo bản sao dữ liệu gốc
+        let filteredMovies = [...allMovies];
         switch (newFilter) {
             case "on_tv":
-                // Sắp xếp theo tên (A-Z)
+
                 filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
                 break;
             case "for_rent":
-                // Sắp xếp theo điểm đánh giá (từ cao đến thấp)
+
                 filteredMovies.sort((a, b) => b.vote_average - a.vote_average);
                 break;
             case "in_theaters":
-                // Hiển thị ngẫu nhiên một số phim
+
                 filteredMovies = filteredMovies.sort(() => 0.5 - Math.random()).slice(0, 5);
                 break;
             default:
                 break;
         }
-        setMovies(filteredMovies); // Cập nhật dữ liệu hiển thị
+        setMovies(filteredMovies);
     };
 
     const handleFilterChange = (newFilter) => {
-        setIsFading(true); // Kích hoạt fade-out
+        setIsFading(true);
         setTimeout(() => {
-            setFilter(newFilter); // Cập nhật trạng thái filter
-            applyFilter(newFilter); // Áp dụng lọc
-            setIsFading(false); // Kích hoạt fade-in
-        }, 300); // Thời gian hiệu ứng fade-out
+            setFilter(newFilter);
+            applyFilter(newFilter);
+            setIsFading(false);
+        }, 300);
     };
 
     useEffect(() => {

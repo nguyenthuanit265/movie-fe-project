@@ -15,6 +15,7 @@ import MovieDetail from "../components/screens/MovieDetail";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import CastDetail from '../components/screens/CastDetail';
+import SearchResultPage from '../components/screens/SearchResult';
 
 const AppRoutes = () => {
     const dispatch = useDispatch();
@@ -73,6 +74,7 @@ const AppRoutes = () => {
                     } />
                     <Route path="/movie/:id" element={<MovieDetail />} />
                     <Route path="/cast/:id" element={<CastDetail />} />
+                    <Route path="/page-result/:query" element={<SearchResultPage />} />
                 </Routes>
             </main>
             <Footer />

@@ -22,7 +22,6 @@ const MovieCard = ({ data }) => {
             className="group relative flex-none w-[150px] transition-transform duration-200 hover:scale-[1.05] cursor-pointer"
             onClick={handleClick}
         >
-            {/* Progress bars on hover */}
             <div className="absolute left-0 top-0 bottom-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {[...Array(8)].map((_, i) => (
                     <div key={i} className="h-8 w-full bg-[#1ed5a9]" />
